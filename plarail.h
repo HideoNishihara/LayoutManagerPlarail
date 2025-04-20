@@ -1,9 +1,5 @@
-#ifndef PLARAIL_H
-#define PLARAIL_H
-
+#pragma once
 namespace plarail {
-    void sendIRNative(int cmd);
-    int receiveIRNative();
+	void sendIR(int id, int speed);
 }
-
-#endif
+

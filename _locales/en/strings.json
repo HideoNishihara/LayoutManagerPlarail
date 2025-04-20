@@ -2,6 +2,20 @@
     "name": "Layout Manager Plarail",
     "description": "An extension for controlling and monitoring Plarail trains using infrared communication.",
 
+	"plarail.TrainSpeed": "Train speed",
+	"plarail.TrainSpeed.Level1": "Level 1 (Very Slow)",
+	"plarail.TrainSpeed.Level2": "Level 2 (Slow)",
+	"plarail.TrainSpeed.Level3": "Level 3 (Slightly Slow)",
+	"plarail.TrainSpeed.Level4": "Level 4 (Medium)",
+	"plarail.TrainSpeed.Level5": "Level 5 (Fast)",
+	"plarail.TrainSpeed.Level6": "Level 6 (Very Fast)"
+
+
+
+
+
+
+
 	"plarail.send_command_to_train1": "Send to the Train 1 | direction %dir | speed %speed",
 	"plarail.send_command_to_train2": "Send to the Train 2 | direction %dir | speed %speed",
 
@@ -19,16 +33,6 @@
     "plarail.TrainDirection": "Train direction",
     "plarail.TrainDirection.Forward": "Forward",
     "plarail.TrainDirection.Reverse": "Reverse",
-
-    "plarail.TrainSpeed": "Train speed",
-    "plarail.TrainSpeed.Stop": "Stop",
-    "plarail.TrainSpeed.Level1": "Level 1 (Very Slow)",
-    "plarail.TrainSpeed.Level2": "Level 2 (Slow)",
-    "plarail.TrainSpeed.Level3": "Level 3 (Slightly Slow)",
-    "plarail.TrainSpeed.Level4": "Level 4 (Medium)",
-    "plarail.TrainSpeed.Level5": "Level 5 (Slightly Fast)",
-    "plarail.TrainSpeed.Level6": "Level 6 (Fast)",
-    "plarail.TrainSpeed.Level7": "Level 7 (Very Fast)",
 
 	"plarail.on_sensor_enter": "When a train arrives at sensor ID %sensorId",
 	"plarail.on_sensor_leave": "When a train leaves sensor ID %sensorId"
