@@ -1,0 +1,15 @@
+{
+  "name": "ir-extension",
+  "description": "Custom IR send/receive extension for MakeCode",
+  "dependencies": {},
+  "files": [
+    "ir.ts",
+    "ir.cpp",
+    "ir.h",
+    "shims.d.ts"
+  ],
+  "targetVersions": {
+    "microbit": "0.14.6",
+    "microbitSim": "0.14.6"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "irtrain",
+  "version": "0.0.1",
+  "description": "Train IR communication with PIC",
+  "dependencies": {},
+  "files": ["main.ts", "shims.d.ts"],
+  "testFiles": [],
+  "public": true
+}

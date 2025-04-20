@@ -1,0 +1,57 @@
+{
+  "plarail.sendToTrain1": {
+    "block": "列車1にコマンドを送信",
+    "params": {
+        "dir": "列車の進行方向（前進または後退）",
+        "speed": "速度レベル（0:停止 ～ 7:とても速い）"
+    },
+    "tooltip": "赤外線で列車1に進行方向と速度のコマンドを送信します。"
+  },
+  "plarail.sendToTrain2": {
+    "block": "列車2にコマンドを送信",
+    "params": {
+        "dir": "列車の進行方向（前進または後退）",
+        "speed": "速度レベル（0:停止 ～ 7:とても速い）"
+    },
+    "tooltip": "赤外線で列車2に進行方向と速度のコマンドを送信します。"
+  },
+  "plarail.reverseTrain1Direction": {
+    "block": "列車1の進行方向を反転",
+    "tooltip": "列車1の進行方向を前進と後退で切り替えます。"
+  },
+  "plarail.reverseTrain2Direction": {
+    "block": "列車2の進行方向を反転",
+    "tooltip": "列車2の進行方向を前進と後退で切り替えます。"
+  },
+  "plarail.accelerateTrain1": {
+    "block": "列車1を加速",
+    "tooltip": "列車1の速度を1段階上げます。"
+  },
+  "plarail.accelerateTrain2": {
+    "block": "列車2を加速",
+    "tooltip": "列車2の速度を1段階上げます。"
+  },
+  "plarail.decelerateTrain1": {
+    "block": "列車1を減速",
+    "tooltip": "列車1の速度を1段階下げます。"
+  },
+  "plarail.decelerateTrain2": {
+    "block": "列車2を減速",
+    "tooltip": "列車2の速度を1段階下げます。"
+  },
+  "plarail.stopAllTrains": {
+    "block": "すべての列車を停止",
+    "tooltip": "すべての列車に停止コマンドを送信します。"
+  },
+  "plarail.onSensorEnter": {
+    "block": "センサーID %sensorId に列車が来たとき",
+    "params": {
+        "sensorId": "センサーID（1 ～ 16）"
+    },
+    "tooltip": "指定されたセンサーIDに列車が来たときの処理を定義します。"
+  },
+  "plarail.onSensorLeave": {
+    "block": "センサーID %sensorId から列車が離れたとき",
+    "tooltip": "指定されたセンサーIDから列車が離れたときの処理を定義します。"
+  }
+}

@@ -1,0 +1,35 @@
+{
+    "name": "レイアウトマネージャー プラレール",
+    "description": "赤外線通信でプラレールを制御・監視する拡張機能です。",
+
+	"plarail.send_command_to_train1": "列車１の | 進行方向を %dir に | 速度を %speed にする。",
+	"plarail.send_command_to_train2": "列車２の | 進行方向を %dir に | 速度を %speed にする。",
+
+	"plarail.reverse_train1_direction": "列車１の進行方向を反転する。",
+	"plarail.reverse_train2_direction": "列車２の進行方向を反転する。",
+
+	"plarail.accelerate_train1": "列車1を加速する。",
+	"plarail.accelerate_train2": "列車2を加速する。",
+
+	"plarail.decelerate_train1": "列車1を減速する。",
+	"plarail.decelerate_train2": "列車2を減速する。",
+
+  	"plarail.stop_all_trains": "すべての列車を停止する。",
+
+    "plarail.TrainDirection": "進行方向",
+    "plarail.TrainDirection.Forward": "前進",
+    "plarail.TrainDirection.Reverse": "後退",
+
+    "plarail.TrainSpeed": "速度",
+    "plarail.TrainSpeed.Stop": "停止",
+    "plarail.TrainSpeed.Level1": "レベル1（とても遅い）",
+    "plarail.TrainSpeed.Level2": "レベル2（遅い）",
+    "plarail.TrainSpeed.Level3": "レベル3（やや遅い）",
+    "plarail.TrainSpeed.Level4": "レベル4（中くらい）",
+    "plarail.TrainSpeed.Level5": "レベル5（やや速い）",
+    "plarail.TrainSpeed.Level6": "レベル6（速い）",
+    "plarail.TrainSpeed.Level7": "レベル7（とても速い）",
+
+	"plarail.on_sensor_enter": "センサーID %sensorId に列車が来たとき",
+	"plarail.on_sensor_leave": "センサーID %sensorId から列車が離れたとき"
+}

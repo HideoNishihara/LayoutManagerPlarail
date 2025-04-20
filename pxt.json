@@ -1,0 +1,15 @@
+{
+  "name": "layout-manager-plarail",
+  "version": "0.0.2",
+  "description": "Layout Manager Plarail IR Control",
+  "dependencies": {
+    "core": "*"
+  },
+  "files": [
+    "plarail.ts",
+    "plarail.cpp",
+    "plarail.h",
+    "main.ts"
+  ],
+  "preferredEditor": "tsprj"
+}

@@ -1,0 +1,60 @@
+{
+  "plarail.sendToTrain1": {
+    "block": "Send to the Train 1",
+    "params": {
+        "dir": "Train direction (Forward or Reverse)",
+        "speed": "Speed level (0:stop - 7:Very Fast)"
+    },
+    "tooltip": "Send an IR command with direction and speed to Train 1."
+  },
+  "plarail.sendToTrain2": {
+    "block": "Send to the Train 2",
+    "params": {
+        "dir": "Train direction (Forward or Reverse)",
+        "speed": "Speed level (0:stop - 7:Very Fast)"
+    },
+    "tooltip": "Send an IR command with direction and speed to Train 2."
+  },
+  "plarail.reverseTrain1Direction": {
+    "block": "Reverse direction of the Train 1",
+    "tooltip": "Toggle Train 1's direction between forward and reverse."
+  },
+  "plarail.reverseTrain2Direction": {
+    "block": "Reverse direction of the Train 2",
+    "tooltip": "Toggle Train 2's direction between forward and reverse."
+  },
+  "plarail.accelerateTrain1": {
+    "block": "Accelerate the Train 1",
+    "tooltip": "Increase the speed level of Train 1 by 1."
+  },
+  "plarail.accelerateTrain2": {
+    "block": "Accelerate the Train 2",
+    "tooltip": "Increase the speed level of Train 2 by 1."
+  },
+  "plarail.decelerateTrain1": {
+    "block": "Decelerate the Train 1",
+    "tooltip": "Decrease the speed level of Train 1 by 1."
+  },
+  "plarail.decelerateTrain2": {
+    "block": "Decelerate the Train 2",
+    "tooltip": "Decrease the speed level of Train 2 by 1."
+  },
+  "plarail.stopAllTrains": {
+    "block": "Stop all trains",
+    "tooltip": "Send stop commands to all trains."
+  },
+  "plarail.onSensorEnter": {
+    "block": "When a train arrives at sensor ID %sensorId",
+    "params": {
+        "sensorId": "Sensor ID (1 - 16)"
+    },
+    "tooltip": "Run the handler when a train is detected at the specified sensor ID."
+  },
+  "plarail.onSensorLeave": {
+    "block": "When a train leaves sensor ID %sensorId",
+    "params": {
+        "sensorId": "Sensor ID (1 - 16)"
+    },
+    "tooltip": "Run the handler when a train leaves the specified sensor ID."
+  }
+}

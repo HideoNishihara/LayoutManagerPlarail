@@ -1,0 +1,12 @@
+{
+  "name": "plarail",
+  "description": "IR communication extension for Plarail on micro:bit",
+  "dependencies": {},
+  "files": [
+    "main.ts",
+    "plarail.cpp",
+    "plarail.h",
+    "shims.d.ts"
+  ],
+  "public": true
+}
