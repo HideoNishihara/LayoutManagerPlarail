@@ -1,12 +1,12 @@
-//% weight=100 color=#0fbc11
 //% block="Layout Manager Plarail"
+//% weight=100 color=#0fbc11 icon="\uf239"
 namespace plarail {
+
     /**
      * LEDを交互に点滅させる（テスト用）
      */
     //% blockId=plarail_test_blink
     //% block="LEDを交互に点滅する"
-    //% blockNamespace="plarail"
     //% weight=90
     export function testBlink(): void {
         control.inBackground(function () {
