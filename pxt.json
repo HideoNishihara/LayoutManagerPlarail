@@ -1,14 +1,12 @@
 {
   "name": "layout-manager-plarail",
-  "version": "0.0.2",
-  "description": "Layout Manager Plarail IR Control",
+  "version": "0.0.1",
+  "description": "Test blinking LED block",
   "dependencies": {
     "core": "*"
   },
   "files": [
-    "main.ts",
-    "plarail.cpp",
-    "plarail.h"
+    "main.ts"
   ],
   "preferredEditor": "tsprj"
 }
