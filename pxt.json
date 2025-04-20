@@ -1,6 +1,6 @@
 {
   "name": "layout-manager-template",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Layout Manager Plarail test block",
   "dependencies": {
     "core": "*"
