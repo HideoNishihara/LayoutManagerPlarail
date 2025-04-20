@@ -132,6 +132,20 @@ namespace plarail {
 		pins.digitalWritePin(BLUE_LED, 1);
 		pins.digitalWritePin(RED_LED, 0);
 
+
+    serial.writeLine("LED 強制点灯実行");
+
+    control.inBackground(function () {
+        while (true) {
+            // 無条件で青点灯、赤消灯
+            pins.digitalWritePin(BLUE_LED, 1);
+            pins.digitalWritePin(RED_LED, 0);
+
+            basic.pause(1000);
+        }
+    });
+
+/*
 		control.inBackground(function () {
 			while (true) {
 				const adc = pins.analogReadPin(AnalogPin.P2);
@@ -148,6 +162,8 @@ namespace plarail {
 				basic.pause(voltageCheckInterval);
 			}
 		});
+*/
+
 	}
 	//============================================================
 }
