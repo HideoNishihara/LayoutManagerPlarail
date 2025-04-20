@@ -6,9 +6,10 @@ namespace plarail {
      * LEDを交互に点滅させる（テスト用）
      */
     //% blockId=plarail_test_blink
-    //% block="LEDを交互に点滅する"
+    //% block="LEDを交互に点滅する | id %id"
+    //% id.min=0 id.max=15
     //% weight=90
-    export function testBlink(): void {
+    export function testBlink(id: number): void {
         control.inBackground(function () {
             while (true) {
                 pins.digitalWritePin(DigitalPin.P14, 1); // 赤
