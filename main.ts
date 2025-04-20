@@ -6,6 +6,7 @@ namespace plarail {
      */
     //% blockId=plarail_test_blink
     //% block="LEDを交互に点滅する"
+    //% blockNamespace="plarail"
     //% weight=90
     export function testBlink(): void {
         control.inBackground(function () {
