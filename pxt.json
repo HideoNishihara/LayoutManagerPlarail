@@ -1,7 +1,7 @@
 {
-  "name": "layout-manager-plarail",
+  "name": "layout-manager-template",
   "version": "0.0.1",
-  "description": "Test blinking LED block",
+  "description": "Layout Manager Plarail test block",
   "dependencies": {
     "core": "*"
   },
