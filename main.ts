@@ -128,42 +128,32 @@ namespace plarail {
 	//-----------------------------------------------------
 	//	電圧監視を開始する
 	//-----------------------------------------------------
-	export function startVoltageMonitoring() {
+    //% blockId=plarail_start_voltage_monitoring
+    //% block="電圧監視を開始する"
+    //% weight=90
+    export function startVoltageMonitoring() {
 		pins.digitalWritePin(BLUE_LED, 1);
 		pins.digitalWritePin(RED_LED, 0);
 
 
     serial.writeLine("LED 強制点灯実行");
 
-    control.inBackground(function () {
-        while (true) {
-            // 無条件で青点灯、赤消灯
-            pins.digitalWritePin(BLUE_LED, 1);
-            pins.digitalWritePin(RED_LED, 0);
+        control.inBackground(function () {
+            while (true) {
+                const adc = pins.analogReadPin(AnalogPin.P2);
+                const voltage = (adc * 3.3 / 1023) * 2;
 
-            basic.pause(1000);
-        }
-    });
+                if (voltage <= voltageThreshold) {
+                    pins.digitalWritePin(BLUE_LED, 0);
+                    pins.digitalWritePin(RED_LED, 1);
+                } else {
+                    pins.digitalWritePin(BLUE_LED, 1);
+                    pins.digitalWritePin(RED_LED, 0);
+                }
 
-/*
-		control.inBackground(function () {
-			while (true) {
-				const adc = pins.analogReadPin(AnalogPin.P2);
-				const voltage = (adc * 3.3 / 1023) * 2;
-
-				if (voltage <= voltageThreshold) {
-					pins.digitalWritePin(BLUE_LED, 0);
-					pins.digitalWritePin(RED_LED, 1);
-				} else {
-					pins.digitalWritePin(BLUE_LED, 1);
-					pins.digitalWritePin(RED_LED, 0);
-				}
-
-				basic.pause(voltageCheckInterval);
-			}
-		});
-*/
-
+                basic.pause(voltageCheckInterval);
+            }
+        });
 	}
 	//============================================================
 }
@@ -171,4 +161,5 @@ namespace plarail {
 //============================================================
 // 起動直後に電圧監視を開始する
 //============================================================
-plarail.startVoltageMonitoring();
+//plarail.startVoltageMonitoring();
+serial.writeLine("main.ts 末尾まで実行済み");
