@@ -4,7 +4,7 @@ namespace plarail {
      * LEDを交互に点滅させる（テスト用）
      */
     //% blockId=plarail_test_blink
-    //% block="LEDを交互に点滅する4"
+    //% block="LEDを交互に点滅する5"
     //% weight=90
     export function testBlink(): void {
         control.inBackground(function () {
