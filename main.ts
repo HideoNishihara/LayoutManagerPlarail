@@ -155,4 +155,4 @@ namespace plarail {
 //============================================================
 // 起動直後に電圧監視を開始する
 //============================================================
-Plarail.startVoltageMonitoring();
+plarail.startVoltageMonitoring();
