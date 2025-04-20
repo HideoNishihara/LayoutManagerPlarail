@@ -1,4 +1,4 @@
-//% weight=100 color=#0fbc11 icon="\uf239"
+//% weight=100 color=#0fbc11
 //% block="Layout Manager Plarail"
 namespace plarail {
     /**
