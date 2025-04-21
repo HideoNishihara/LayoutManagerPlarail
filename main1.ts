@@ -39,8 +39,8 @@ namespace plarail {
 	}
 
 	// P16の初回パルスで初期化実行
-	//pins.setPull(DigitalPin.P16, PinPullMode.PullUp)
-	//pins.onPulsed(DigitalPin.P16, PulseValue.Low, triggerInitByIRNoise)
+	pins.setPull(DigitalPin.P16, PinPullMode.PullUp)
+	pins.onPulsed(DigitalPin.P16, PulseValue.Low, triggerInitByIRNoise)
 
 
     //% blockId=plarail_forward_up_a
@@ -224,4 +224,4 @@ namespace plarail {
     declare function receiveIRSensorNative(): number;
 }
 
-startVoltageMonitoring();
+//startVoltageMonitoring();
