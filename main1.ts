@@ -88,4 +88,87 @@ namespace plarail {
      */
     //% shim=plarail::sendIR
     declare function sendIR(id: number, dir: number, speed: number): void;
+
+
+
+
+
+
+
+
+
+    // イベント種別の定義
+    enum SensorEvent {
+        Magnetic = 0,
+        BrightnessDetected = 1,
+        Departure = 2
+    }
+
+    type SensorHandler = () => void
+
+    // センサーイベントごとのハンドラ管理 [event][id]
+    const handlers: SensorHandler[][] = [
+        [], [], [] // Magnetic, Brightness, Departure
+    ];
+
+    /**
+     * 内部処理：受信されたセンサーIDとイベントに応じてコールバック呼び出し
+     */
+    function dispatchSensorEvent(id: number, event: SensorEvent) {
+        if (handlers[event] && handlers[event][id]) {
+            handlers[event][id]()
+        }
+    }
+
+    /**
+     * 赤外線受信ループ開始（C++から値をポーリング）
+     */
+    function startSensorReceiver() {
+        control.inBackground(function () {
+            while (true) {
+                const raw = receiveIRSensorNative()
+                const id = (raw >> 4) & 0x0F
+                const event = raw & 0x0F
+
+                dispatchSensorEvent(id, event)
+                basic.pause(50)
+            }
+        });
+    }
+
+    let receiverStarted = false
+    function ensureReceiver() {
+        if (!receiverStarted) {
+            startSensorReceiver()
+            receiverStarted = true
+        }
+    }
+
+    //% blockId=plarail_on_magnetic
+    //% block="センサーID %id で磁気検出時"
+    //% id.min=0 id.max=15
+    export function onMagnetic(id: number, handler: () => void) {
+        ensureReceiver()
+        handlers[SensorEvent.Magnetic][id] = handler
+    }
+
+    //% blockId=plarail_on_brightness
+    //% block="センサーID %id で明度検出時"
+    //% id.min=0 id.max=15
+    export function onBrightness(id: number, handler: () => void) {
+        ensureReceiver()
+        handlers[SensorEvent.BrightnessDetected][id] = handler
+    }
+
+    //% blockId=plarail_on_departure
+    //% block="センサーID %id で列車離脱時"
+    //% id.min=0 id.max=15
+    export function onDeparture(id: number, handler: () => void) {
+        ensureReceiver()
+        handlers[SensorEvent.Departure][id] = handler
+    }
+
+    // C++ で実装される受信関数（8bit：上位4bit=ID、下位4bit=event）
+    //% shim=plarail::receiveIRSensorNative
+    declare function receiveIRSensorNative(): number;
 }
