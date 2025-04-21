@@ -144,26 +144,60 @@ namespace plarail {
         }
     }
 
+
+    // センサーID（0〜15）をプルダウンで指定するための列挙型
+    export enum SensorID {
+        //% block="センサー0"
+        ID0 = 0,
+        //% block="センサー1"
+        ID1 = 1,
+        //% block="センサー2"
+        ID2 = 2,
+        //% block="センサー3"
+        ID3 = 3,
+        //% block="センサー4"
+        ID4 = 4,
+        //% block="センサー5"
+        ID5 = 5,
+        //% block="センサー6"
+        ID6 = 6,
+        //% block="センサー7"
+        ID7 = 7,
+        //% block="センサー8"
+        ID8 = 8,
+        //% block="センサー9"
+        ID9 = 9,
+        //% block="センサー10"
+        ID10 = 10,
+        //% block="センサー11"
+        ID11 = 11,
+        //% block="センサー12"
+        ID12 = 12,
+        //% block="センサー13"
+        ID13 = 13,
+        //% block="センサー14"
+        ID14 = 14,
+        //% block="センサー15"
+        ID15 = 15
+    }
+
     //% blockId=plarail_on_magnetic
-    //% block="センサーID %id で磁気検出時"
-    //% id.min=0 id.max=15
-    export function onMagnetic(id: number, handler: () => void) {
+    //% block="センサー %id で磁気検出時"
+    export function onMagnetic(id: SensorID, handler: () => void) {
         ensureReceiver()
         handlers[SensorEvent.Magnetic][id] = handler
     }
 
     //% blockId=plarail_on_brightness
-    //% block="センサーID %id で明度検出時"
-    //% id.min=0 id.max=15
-    export function onBrightness(id: number, handler: () => void) {
+    //% block="センサー %id で明度検出時"
+    export function onBrightness(id: SensorID, handler: () => void) {
         ensureReceiver()
         handlers[SensorEvent.BrightnessDetected][id] = handler
     }
 
     //% blockId=plarail_on_departure
-    //% block="センサーID %id で列車離脱時"
-    //% id.min=0 id.max=15
-    export function onDeparture(id: number, handler: () => void) {
+    //% block="センサー %id で列車離脱時"
+    export function onDeparture(id: SensorID, handler: () => void) {
         ensureReceiver()
         handlers[SensorEvent.Departure][id] = handler
     }
