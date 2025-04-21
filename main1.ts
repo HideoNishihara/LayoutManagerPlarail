@@ -2,29 +2,46 @@
 namespace plarail {
     let speedA = 0
     let speedB = 0
-    const RED_LED = DigitalPin.P14
-    const BLUE_LED = DigitalPin.P15
-    const VOLTAGE_PIN = AnalogPin.P2
-    const VOLTAGE_THRESHOLD = 2.4
 
-    //% blockId=plarail_init_monitor
-    //% block="初期化（電圧監視とLED表示）"
-    export function initialize(): void {
-        control.inBackground(function () {
-            while (true) {
-                const adc = pins.analogReadPin(VOLTAGE_PIN)
-                const voltage = adc * 3.3 / 1023 * 2
-                if (voltage < VOLTAGE_THRESHOLD) {
-                    pins.digitalWritePin(RED_LED, 1)
-                    pins.digitalWritePin(BLUE_LED, 0)
-                } else {
-                    pins.digitalWritePin(RED_LED, 0)
-                    pins.digitalWritePin(BLUE_LED, 1)
-                }
-                basic.pause(1000)
-            }
-        });
-    }
+	const RED_LED = DigitalPin.P14
+	const BLUE_LED = DigitalPin.P15
+	const VOLTAGE_PIN = AnalogPin.P2
+	const VOLTAGE_THRESHOLD = 2.4
+
+	/**
+	 * 電圧監視とLED表示ルーチン（1秒ごと）
+	 */
+	function startVoltageMonitoring(): void {
+	    control.inBackground(function () {
+	        while (true) {
+	            const adc = pins.analogReadPin(VOLTAGE_PIN)
+	            const voltage = adc * 3.3 / 1023 * 2
+	            if (voltage < VOLTAGE_THRESHOLD) {
+	                pins.digitalWritePin(RED_LED, 1)
+	                pins.digitalWritePin(BLUE_LED, 0)
+	            } else {
+	                pins.digitalWritePin(RED_LED, 0)
+	                pins.digitalWritePin(BLUE_LED, 1)
+	            }
+	            basic.pause(1000)
+	        }
+	    });
+	}
+
+	/**
+	 * 割り込み処理：初回だけ実行 → 以後は解除
+	 */
+	function triggerInitByIRNoise(): void {
+	    startVoltageMonitoring()
+
+	    // 割り込み解除（簡易的にダミーで上書き）
+	    pins.onPulsed(DigitalPin.P16, PulseValue.Low, () => {})
+	}
+
+	// P16の初回パルスで初期化実行
+	//pins.setPull(DigitalPin.P16, PinPullMode.PullUp)
+	//pins.onPulsed(DigitalPin.P16, PulseValue.Low, triggerInitByIRNoise)
+
 
     //% blockId=plarail_forward_up_a
     //% block="列車A 前進加速"
@@ -182,21 +199,21 @@ namespace plarail {
     }
 
     //% blockId=plarail_on_magnetic
-    //% block="センサー %id で磁気検出時"
+    //% block="%id で磁気検出時"
     export function onMagnetic(id: SensorID, handler: () => void) {
         ensureReceiver()
         handlers[SensorEvent.Magnetic][id] = handler
     }
 
     //% blockId=plarail_on_brightness
-    //% block="センサー %id で明度検出時"
+    //% block="%id で明度検出時"
     export function onBrightness(id: SensorID, handler: () => void) {
         ensureReceiver()
         handlers[SensorEvent.BrightnessDetected][id] = handler
     }
 
     //% blockId=plarail_on_departure
-    //% block="センサー %id で列車離脱時"
+    //% block="%id で列車離脱時"
     export function onDeparture(id: SensorID, handler: () => void) {
         ensureReceiver()
         handlers[SensorEvent.Departure][id] = handler
@@ -206,3 +223,5 @@ namespace plarail {
     //% shim=plarail::receiveIRSensorNative
     declare function receiveIRSensorNative(): number;
 }
+
+startVoltageMonitoring();
