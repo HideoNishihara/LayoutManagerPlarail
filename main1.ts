@@ -31,6 +31,24 @@ namespace plarail {
 
 
 
+	/**
+	 * 割り込み処理：初回だけ実行 → 以後は解除
+	 */
+	function triggerInitByIRNoise(): void {
+	    startVoltageMonitoring()
+
+	    // 割り込み解除（簡易的にダミーで上書き）
+	    pins.onPulsed(DigitalPin.P16, PulseValue.Low, () => {})
+	}
+
+	// P16の初回パルスで初期化実行
+	pins.setPull(DigitalPin.P16, PinPullMode.PullUp)
+	pins.onPulsed(DigitalPin.P16, PulseValue.Low, triggerInitByIRNoise)
+
+
+
+
+
 
     //% blockId=plarail_forward_up_a
     //% block="列車A 前進加速"
@@ -213,4 +231,3 @@ namespace plarail {
     declare function receiveIRSensorNative(): number;
 }
 
-plarail.startVoltageMonitoring();
