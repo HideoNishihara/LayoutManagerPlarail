@@ -98,7 +98,7 @@ namespace plarail {
 
 
     // イベント種別の定義
-    enum SensorEvent {
+    export enum SensorEvent {
         Magnetic = 0,
         BrightnessDetected = 1,
         Departure = 2
