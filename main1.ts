@@ -9,9 +9,9 @@ namespace plarail {
 	const VOLTAGE_PIN = AnalogPin.P2
 	const VOLTAGE_THRESHOLD = 2.4
 
-	/ **
+	/**
 	 * 電圧監視とLED表示ルーチン（1秒ごと）
-	 * /
+	 */
 	function startVoltageMonitoring(): void {
 	    control.inBackground(function () {
 	        while (true) {
