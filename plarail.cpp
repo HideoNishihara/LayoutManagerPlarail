@@ -1,11 +1,11 @@
 #include "pxt.h"
-using namespace pxt;
+#include "plarail.h"
 
 namespace plarail {
-	void sendIR(int id, int speed) {
-		// 実際の赤外線送信ロジックを書く
-		// ここではデバッグ出力の例：
-		DMESG("Send IR to ID=%d, speed=%d", id, speed);
-	}
+    void sendIR(int id, int dir, int speed) {
+        // 実装例：IRフォーマット生成＆IR-LED送信（P1接続）
+        // 送信タイミングやPWM出力はここに記述
+        // ★この関数はMakeCodeから呼び出されます
+    }
 }
 
