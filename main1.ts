@@ -3,11 +3,29 @@ namespace plarail {
     let speedA = 0
     let speedB = 0
 
+    const RED_LED = DigitalPin.P14
+    const BLUE_LED = DigitalPin.P15
+    const VOLTAGE_PIN = AnalogPin.P2
+    const VOLTAGE_THRESHOLD = 2.4
 
-
-
-
-
+    //% blockId=plarail_init_monitor
+    //% block="初期化（電圧監視とLED表示）"
+    export function initialize(): void {
+        control.inBackground(function () {
+            while (true) {
+                const adc = pins.analogReadPin(VOLTAGE_PIN)
+                const voltage = adc * 3.3 / 1023 * 2
+                if (voltage < VOLTAGE_THRESHOLD) {
+                    pins.digitalWritePin(RED_LED, 1)
+                    pins.digitalWritePin(BLUE_LED, 0)
+                } else {
+                    pins.digitalWritePin(RED_LED, 0)
+                    pins.digitalWritePin(BLUE_LED, 1)
+                }
+                basic.pause(1000)
+            }
+        });
+    }
 
     //% blockId=plarail_forward_up_a
     //% block="列車A 前進加速"
