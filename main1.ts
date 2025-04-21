@@ -3,14 +3,45 @@ namespace plarail {
     let speedA = 0
     let speedB = 0
 
+	let initialized = false
+
+    const RED_LED = DigitalPin.P14
+    const BLUE_LED = DigitalPin.P15
+    const VOLTAGE_PIN = AnalogPin.P2
+    const VOLTAGE_THRESHOLD = 2.4
+
+    //% blockId=plarail_init_monitor
+    //% block="初期化（電圧監視とLED表示）"
+    export function initialize(): void {
+        control.inBackground(function () {
+            while (true) {
+                const adc = pins.analogReadPin(VOLTAGE_PIN)
+                const voltage = adc * 3.3 / 1023 * 2
+                if (voltage < VOLTAGE_THRESHOLD) {
+                    pins.digitalWritePin(RED_LED, 1)
+                    pins.digitalWritePin(BLUE_LED, 0)
+                } else {
+                    pins.digitalWritePin(RED_LED, 0)
+                    pins.digitalWritePin(BLUE_LED, 1)
+                }
+                basic.pause(1000)
+            }
+        });
+    }
+
+
+
+
+/*
+
 	const RED_LED = DigitalPin.P14
 	const BLUE_LED = DigitalPin.P15
 	const VOLTAGE_PIN = AnalogPin.P2
 	const VOLTAGE_THRESHOLD = 2.4
 
-	/**
+	/ **
 	 * 電圧監視とLED表示ルーチン（1秒ごと）
-	 */
+	 * /
 	function startVoltageMonitoring(): void {
 	    control.inBackground(function () {
 	        while (true) {
@@ -28,9 +59,9 @@ namespace plarail {
 	    });
 	}
 
-	/**
+	/ **
 	 * 割り込み処理：初回だけ実行 → 以後は解除
-	 */
+	 * /
 	function triggerInitByIRNoise(): void {
 	    startVoltageMonitoring()
 
@@ -42,7 +73,7 @@ namespace plarail {
 //	pins.setPull(DigitalPin.P16, PinPullMode.PullUp)
 //	pins.onPulsed(DigitalPin.P16, PulseValue.Low, triggerInitByIRNoise)
 
-
+*/
 
 
 
