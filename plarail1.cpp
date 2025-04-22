@@ -4,6 +4,7 @@
 #define IR_PIN MICROBIT_PIN_P1
 
 namespace plarail {
+/*
     // 38kHzキャリアを指定時間だけ出力（PWM）
     void sendMark(int duration_us) {
         IR_PIN->setAnalogPeriodUs(26);    // 約38.5kHz
@@ -34,6 +35,9 @@ namespace plarail {
             data <<= 1;
         }
     }
+*/
+
+
 
     void sendIR(int id, int dir, int speed) {
 /*
