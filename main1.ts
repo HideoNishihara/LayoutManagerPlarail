@@ -78,7 +78,7 @@ namespace plarail {
     //% blockId=plarail_reverse_b
     //% block="列車B 後進"
     export function reverseB(): void {
-        //sendIR(1, 2, 0)
+        sendIR(1, 2, 0)
     }
 
     /**
