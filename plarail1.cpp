@@ -43,7 +43,8 @@ namespace plarail {
         uint8_t payload = d | (dInv << 4);
 
 
-        payload = 0b10010110;
+        //payload = 0b10010110;
+        payload = 0x96;
 
 
 
