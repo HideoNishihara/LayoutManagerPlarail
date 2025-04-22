@@ -6,7 +6,9 @@
     "core": "*"
   },
   "files": [
-    "main.ts"
+    "main.ts",
+    "plareil.h",
+    "plarail.cpp"
   ],
   "preferredEditor": "tsprj"
 }
