@@ -36,6 +36,7 @@ namespace plarail {
     }
 
     void sendIR(int id, int dir, int speed) {
+/*
         // データ作成：下位4bit + 上位反転4bit（合計8bit）
         uint8_t data = ((id & 0x0F) << 4) | ((dir & 0x03) << 2) | (speed & 0x03);
         uint8_t d = data & 0x0F;
@@ -55,6 +56,7 @@ namespace plarail {
 
         sendMark(562);    // 終了ビット
         sendSpace(0);
+*/
     }
 
 
