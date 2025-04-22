@@ -7,7 +7,7 @@
   },
   "files": [
     "main.ts",
-    "plareil.h",
+    "plarail.h",
     "plarail.cpp"
   ],
   "preferredEditor": "tsprj"
