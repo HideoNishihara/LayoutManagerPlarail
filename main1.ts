@@ -87,12 +87,58 @@ namespace plarail {
      * @param dir 方向（1=前進, 2=後進）
      * @param speed 速度（0=停止, 1〜6）
      */
-    //% shim=plarail::sendIR
-    declare function sendIR(id: number, dir: number, speed: number): void;
+
+    //% blockId=ir_sender_send
+    //% block="赤外線送信 ID %id 方向 %dir 速度 %speed"
+    //% id.min=0 id.max=15
+    //% dir.min=0 dir.max=3
+    //% speed.min=0 speed.max=15
+    export function sendIR(id: number, dir: number, speed: number): void {
+        //const cmd = ((id & 0x0F) << 4) | ((dir & 0x03) << 2) | (speed & 0x03);
+        //const cmdInv = ~cmd & 0xFF;
+
+		let cmd = 0x96;		//0b10010110;
 
 
+        // プレアンブル
+        mark(9000);
+        space(4500);
 
+        // データ本体
+        sendByte(cmd);
+        //sendByte(cmdInv);
 
+        // 終了ビット
+        mark(562);
+        space(0);
+    }
+
+    function mark(duration: number): void {
+        pins.analogSetPeriodMicroseconds(26); // 約38kHz
+        pins.analogWritePin(AnalogPin.P1, 512); // 50% duty
+        control.waitMicros(duration);
+        pins.analogWritePin(AnalogPin.P1, 0);
+    }
+
+    function space(duration: number): void {
+        pins.analogWritePin(AnalogPin.P1, 0);
+        if (duration > 0) control.waitMicros(duration);
+    }
+
+    function sendBit(bit: number): void {
+        mark(562);
+        if (bit)
+            space(1687);
+        else
+            space(562);
+    }
+
+    function sendByte(byteVal: number): void {
+        for (let i = 0; i < 8; i++) {
+            sendBit(byteVal & 0x80);
+            byteVal <<= 1;
+        }
+    }
 
 
 
