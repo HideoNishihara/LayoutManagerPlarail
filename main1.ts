@@ -142,10 +142,17 @@ namespace plarail {
     function space(duration: number): void {
         // v2はハードPWM
 	    //if (control.hardwareVersion() == "2") {
-	    //    pins.analogWritePin(AnalogPin.P1, 0);
+	    
+	    
+	        pins.analogSetPeriod(AnalogPin.P1, 26);
+	        pins.analogWritePin(AnalogPin.P1, 0);
+        
+        
+        
+        
         // v1はソフトPWM
 	    //} else {
-	        pins.digitalWritePin(DigitalPin.P1, 0);
+	    //    pins.digitalWritePin(DigitalPin.P1, 0);
 		//}
         if (duration > 0) control.waitMicros(duration);
     }
