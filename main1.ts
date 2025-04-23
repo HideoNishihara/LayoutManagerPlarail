@@ -101,7 +101,6 @@ namespace plarail {
         // プレアンブル
         mark(9000);
         space(4500);
-        //space(80000);
 
         // データ本体
 		let cmd = 0b10010110;
@@ -128,26 +127,32 @@ namespace plarail {
 	}
 
 	function mark(duration: number) {
+        // v2はハードPWMで高速かつ安定
 	    if (control.hardwareVersion() == "2") {
-	        // v2ならハードPWMで高速かつ安定
 	        pins.analogSetPeriod(AnalogPin.P1, 26);
 	        pins.analogWritePin(AnalogPin.P1, 512);
 	        control.waitMicros(duration);
 	        pins.analogWritePin(AnalogPin.P1, 0);
+        // v1はソフトPWM
 	    } else {
-	        // v1はソフトPWM
 	        softCarrier38kHz(duration);
 	    }
 	}
 
     function space(duration: number): void {
-        pins.analogWritePin(AnalogPin.P1, 0);
+        // v2はハードPWM
+	    if (control.hardwareVersion() == "2") {
+	        pins.analogWritePin(AnalogPin.P1, 0);
+        // v1はソフトPWM
+	    } else {
+	        pins.digitalWritePin(DigitalPin.P1, 0);
+		}
         if (duration > 0) control.waitMicros(duration);
     }
 
     function sendBit(bit: number): void {
-        mark(562);
-        if (bit)
+        mark(400);
+        if (bit == 0x80)
             space(800);
         else
             space(400);
