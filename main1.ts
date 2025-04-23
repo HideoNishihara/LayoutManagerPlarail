@@ -97,16 +97,26 @@ namespace plarail {
         //const cmd = ((id & 0x0F) << 4) | ((dir & 0x03) << 2) | (speed & 0x03);
         //const cmdInv = ~cmd & 0xFF;
 
-		let cmd = 0x96;		//0b10010110;
-
 
         // プレアンブル
         mark(9000);
         space(4500);
 
         // データ本体
+		let cmd = 0b10010110;
         sendByte(cmd);
         //sendByte(cmdInv);
+
+		for (let i = 0; 10; i++) {
+
+	        // プレアンブル
+	        mark(9000);
+	        space(4500);
+
+			let cmd = 0b10000111;
+	        sendByte(cmd);
+		}
+
 
         // 終了ビット
         mark(562);
