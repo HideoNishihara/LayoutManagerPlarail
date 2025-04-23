@@ -100,26 +100,17 @@ namespace plarail {
 
         // プレアンブル
         mark(9000);
-        space(4500);
+        //space(4500);
+        space(80000);
 
         // データ本体
 		let cmd = 0b10010110;
         sendByte(cmd);
         //sendByte(cmdInv);
 
-		for (let i = 0; i < 10; i++) {
-
-	        // プレアンブル
-	        mark(9000);
-	        space(4500);
-
-			let cmd = 0b10000111;
-	        sendByte(cmd);
-		}
-
 
         // 終了ビット
-        mark(562);
+        mark(400);
         space(0);
     }
 
@@ -157,9 +148,9 @@ namespace plarail {
     function sendBit(bit: number): void {
         mark(562);
         if (bit)
-            space(1687);
+            space(800);
         else
-            space(562);
+            space(400);
     }
 
     function sendByte(byteVal: number): void {
