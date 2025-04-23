@@ -107,7 +107,7 @@ namespace plarail {
         sendByte(cmd);
         //sendByte(cmdInv);
 
-		for (let i = 0; 10; i++) {
+		for (let i = 0; i < 10; i++) {
 
 	        // プレアンブル
 	        mark(9000);
