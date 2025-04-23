@@ -109,7 +109,7 @@ namespace plarail {
 
 
         // 終了ビット
-        mark(400);
+        mark(80000);
         space(0);
     }
 
