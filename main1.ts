@@ -102,8 +102,6 @@ namespace plarail {
         mark(9000);
         space(4500);
 
-        mark(80000);
-
         // データ本体
 		let cmd = 0b10010110;
         sendByte(cmd);
@@ -111,8 +109,8 @@ namespace plarail {
 
 
         // 終了ビット
-        mark(80000);
-        space(0);
+        space(80000);
+        //space(0);
     }
 
 	function softCarrier38kHz(durationMicros: number): void {
@@ -144,10 +142,10 @@ namespace plarail {
     function space(duration: number): void {
         // v2はハードPWM
 	    //if (control.hardwareVersion() == "2") {
-	        pins.analogWritePin(AnalogPin.P1, 0);
+	    //    pins.analogWritePin(AnalogPin.P1, 0);
         // v1はソフトPWM
 	    //} else {
-	    //    pins.digitalWritePin(DigitalPin.P1, 0);
+	        pins.digitalWritePin(DigitalPin.P1, 0);
 		//}
         if (duration > 0) control.waitMicros(duration);
     }
@@ -165,6 +163,7 @@ namespace plarail {
             sendBit(byteVal & 0x80);
             byteVal <<= 1;
         }
+        mark(400);
     }
 
 
