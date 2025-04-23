@@ -129,7 +129,7 @@ namespace plarail {
 	function mark(duration: number) {
 	    if (control.hardwareVersion() == "2") {
 	        // v2ならハードPWMで高速かつ安定
-	        pins.analogSetPeriod(26);
+	        pins.analogSetPeriod(AnalogPin.P1, 26);
 	        pins.analogWritePin(AnalogPin.P1, 512);
 	        control.waitMicros(duration);
 	        pins.analogWritePin(AnalogPin.P1, 0);
