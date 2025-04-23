@@ -113,12 +113,31 @@ namespace plarail {
         space(0);
     }
 
-    function mark(duration: number): void {
-        pins.analogSetPeriodMicroseconds(26); // 約38kHz
-        pins.analogWritePin(AnalogPin.P1, 512); // 50% duty
+	function softCarrier38kHz(durationMicros: number): void {
+	    const period = 26;         // 38.46kHz（1周期 ≒ 26μs）
+	    const half = period / 2;   // 13μs HIGH + 13μs LOW
+	    const count = durationMicros / period;
+
+	    for (let i = 0; i < count; i++) {
+	        pins.digitalWritePin(DigitalPin.P1, 1);
+	        control.waitMicros(half);
+	        pins.digitalWritePin(DigitalPin.P1, 0);
+	        control.waitMicros(half);
+	    }
+	}
+
+function mark(duration: number) {
+    if (control.hardwareVersion() == "2") {
+        // v2ならハードPWMで高速かつ安定
+        pins.analogSetPeriodMicroseconds(26);
+        pins.analogWritePin(AnalogPin.P1, 512);
         control.waitMicros(duration);
         pins.analogWritePin(AnalogPin.P1, 0);
+    } else {
+        // v1はソフトPWM
+        softCarrier38kHz(duration);
     }
+}
 
     function space(duration: number): void {
         pins.analogWritePin(AnalogPin.P1, 0);
