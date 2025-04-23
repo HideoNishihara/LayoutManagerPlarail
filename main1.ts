@@ -100,8 +100,8 @@ namespace plarail {
 
         // プレアンブル
         mark(9000);
-        //space(4500);
-        space(80000);
+        space(4500);
+        //space(80000);
 
         // データ本体
 		let cmd = 0b10010110;
