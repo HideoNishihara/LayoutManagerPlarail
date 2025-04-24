@@ -25,57 +25,100 @@ namespace plarail {
     }
 
     //% blockId=plarail_forward_up_a
-    //% block="列車A 前進加速"
+    //% block="列車A 前進１段階加速"
     export function forwardUpA(): void {
-        if (speedA < 6) speedA++
-        sendIR(0, 1, speedA)
+        handle_cha_Up();
     }
 
     //% blockId=plarail_forward_up_b
-    //% block="列車B 前進加速"
+    //% block="列車B 前進１段階加速"
     export function forwardUpB(): void {
-        if (speedB < 6) speedB++
-        sendIR(1, 1, speedB)
+        handle_chb_Up();
     }
 
+
+    //% blockId=plarail_forward_cup_a
+    //% block="列車A 前進連続加速"
+    export function forwardCUpA(): void {
+        handle_cha_CUp();
+    }
+
+    //% blockId=plarail_forward_cup_b
+    //% block="列車B 前進連続加速"
+    export function forwardCUpB(): void {
+        handle_chb_CUp();
+    }
+
+
+
+
+
     //% blockId=plarail_forward_down_a
-    //% block="列車A 前進減速"
+    //% block="列車A 前進１段階減速"
     export function forwardDownA(): void {
-        if (speedA > 0) speedA--
-        sendIR(0, 1, speedA)
+        handle_cha_Down();
     }
 
     //% blockId=plarail_forward_down_b
-    //% block="列車B 前進減速"
+    //% block="列車B 前進１段階減速"
     export function forwardDownB(): void {
-        if (speedB > 0) speedB--
-        sendIR(1, 1, speedB)
+        handle_chb_Down();
     }
+
+    //% blockId=plarail_forward_cdown_a
+    //% block="列車A 前進連続減速"
+    export function forwardCDownA(): void {
+        handle_cha_CDown();
+    }
+
+    //% blockId=plarail_forward_cdown_b
+    //% block="列車B 前進連続減速"
+    export function forwardCDownB(): void {
+        handle_chb_CDown();
+    }
+
+
+
+
+
+
+
+
 
     //% blockId=plarail_stop_a
     //% block="列車A 停止"
     export function stopA(): void {
-        speedA = 0
-        sendIR(0, 1, 0)
+        handle_cha_Stop();
     }
 
     //% blockId=plarail_stop_b
     //% block="列車B 停止"
     export function stopB(): void {
-        speedB = 0
-        sendIR(1, 1, 0)
+        handle_chb_Stop();
     }
 
     //% blockId=plarail_reverse_a
-    //% block="列車A 後進"
+    //% block="列車A 後進開始"
     export function reverseA(): void {
-        sendIR(0, 2, 0) // 方向: 2=後進, 速度: 0（定速扱い）
+        handle_cha_Back_Start();
+    }
+
+    //% blockId=plarail_reverse_stop_a
+    //% block="列車A 後進停止"
+    export function reverseStopA(): void {
+        handle_cha_Back_End();
     }
 
     //% blockId=plarail_reverse_b
-    //% block="列車B 後進"
+    //% block="列車B 後進開始"
     export function reverseB(): void {
-        sendIR(1, 2, 0)
+        handle_chb_Back_Start();
+    }
+
+    //% blockId=plarail_reverse_stop_b
+    //% block="列車B 後進停止"
+    export function reverseStopB(): void {
+        handle_chb_Back_End();
     }
 
     /**
@@ -122,19 +165,24 @@ namespace plarail {
 	//=================================================
 	//	IRコマンド
 	//=================================================
-	const cha_s_up = 0x96;
-	const cha_c_up = 0xD2;
-	const cha_s_dn = 0xA5;
-	const cha_c_dn = 0xE1;
-	const cha_keep = 0x8E;
+	const cha_s_up = 0x96;			// 列車Ａ	レバー前倒し（１ショット）		１段階加速
+	const cha_c_up = 0xD2;			// 列車Ａ	レバー前倒し（連続）			最高速まで連続加速
+	const cha_s_dn = 0xA5;			// 列車Ａ	レバー手前倒し（１ショット）	１段階減速
+	const cha_c_dn = 0xE1;			// 列車Ａ	レバー手前倒し（連続）			停止まで連続減速
+	const cha_keep = 0x8E;			// 列車Ａ	レバー中立
 
-	const chb_s_up = 0x1E;
-	const chb_c_up = 0x5A;
-	const chb_s_dn = 0x2D;
-	const chb_c_dn = 0x69;
-	const chb_keep = 0x0F;
+	const cha_stop = 0xB4;			// 列車Ａ	停止？
 	
-	
+
+	const chb_s_up = 0x1E;			// 列車Ｂ	レバー前倒し（１ショット）		１段階加速
+	const chb_c_up = 0x5A;			// 列車Ｂ	レバー前倒し（連続）			最高速まで連続加速
+	const chb_s_dn = 0x2D;			// 列車Ｂ	レバー手前倒し（１ショット）	１段階減速
+	const chb_c_dn = 0x69;			// 列車Ｂ	レバー手前倒し（連続）			停止まで連続減速
+	const chb_keep = 0x0F;			// 列車Ｂ	レバー中立
+
+	const chb_stop = 0x3C;			// 列車Ｂ	停止？
+
+
     let speedA = 0
     let speedB = 0
 
@@ -156,6 +204,7 @@ namespace plarail {
 			control.waitMicros(80000);
 			sendByte(cha_keep);
 		}
+		is_cha_back = false;
 	}
 
 	//=================================================
@@ -173,6 +222,7 @@ namespace plarail {
 			control.waitMicros(80000);
 			sendByte(chb_keep);
 		}
+		is_chb_back = false;
 	}
 
 	//=================================================
@@ -192,6 +242,7 @@ namespace plarail {
 			sendByte(cha_keep);
 			control.waitMicros(80000);
 		}
+		is_cha_back = false;
 	}
 
 	//=================================================
@@ -211,6 +262,7 @@ namespace plarail {
 			sendByte(chb_keep);
 			control.waitMicros(80000);
 		}
+		is_chb_back = false;
 	}
 
 	//=================================================
@@ -228,6 +280,7 @@ namespace plarail {
 			control.waitMicros(80000);
 			sendByte(cha_keep);
 		}
+		is_cha_back = false;
 	}
 
 	//=================================================
@@ -245,6 +298,7 @@ namespace plarail {
 			control.waitMicros(80000);
 			sendByte(chb_keep);
 		}
+		is_chb_back = false;
 	}
 
 	//=================================================
@@ -264,6 +318,7 @@ namespace plarail {
 			sendByte(cha_keep);
 			control.waitMicros(80000);
 		}
+		is_cha_back = false;
 	}
 
 	//=================================================
@@ -283,6 +338,7 @@ namespace plarail {
 			sendByte(chb_keep);
 			control.waitMicros(80000);
 		}
+		is_chb_back = false;
 	}
 
 	//=================================================
@@ -328,6 +384,29 @@ namespace plarail {
 		}
 		is_chb_back = false;
 	}
+
+	//=================================================
+	//	列車Ａ　停止
+	//=================================================
+	function handle_cha_Stop() {
+		for (let i = 0; i < 3; i++) {
+			sendByte(cha_stop);
+			control.waitMicros(80000);
+		}
+		is_cha_back = false;
+	}
+
+	//=================================================
+	//	列車Ｂ　停止
+	//=================================================
+	function handle_chb_Stop() {
+		for (let i = 0; i < 3; i++) {
+			sendByte(chb_stop);
+			control.waitMicros(80000);
+		}
+		is_chb_back = false;
+	}
+
 
 	//=================================================
 	//	IR-LEDデータ送出
