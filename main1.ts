@@ -1,8 +1,5 @@
 //% weight=100 color=#0fbc11 icon="\uf239" block="Layout Manager Plarail"
 namespace plarail {
-    let speedA = 0
-    let speedB = 0
-
     const RED_LED = DigitalPin.P14
     const BLUE_LED = DigitalPin.P15
     const VOLTAGE_PIN = AnalogPin.P2
@@ -97,7 +94,7 @@ namespace plarail {
         //const cmd = ((id & 0x0F) << 4) | ((dir & 0x03) << 2) | (speed & 0x03);
         //const cmdInv = ~cmd & 0xFF;
 
-
+/*
         // プレアンブル
         mark(9000);
         space(4500);
@@ -111,66 +108,272 @@ namespace plarail {
         // 終了ビット
         space(80000);
         //space(0);
+*/
+
+		handle_cha_CUp();
+
+
     }
 
-	function softCarrier38kHz(durationMicros: number): void {
-	    const period = 26;         // 38.46kHz（1周期 ≒ 26μs）
-	    const half = period / 2;   // 13μs HIGH + 13μs LOW
-	    const count = durationMicros / period;
 
-	    for (let i = 0; i < count; i++) {
-	        pins.digitalWritePin(DigitalPin.P1, 1);
-	        control.waitMicros(half);
-	        pins.digitalWritePin(DigitalPin.P1, 0);
-	        control.waitMicros(half);
-	    }
+
+
+
+	//=================================================
+	//	IRコマンド
+	//=================================================
+	const cha_s_up = 0x96;
+	const cha_c_up = 0xD2;
+	const cha_s_dn = 0xA5;
+	const cha_c_dn = 0xE1;
+	const cha_keep = 0x8E;
+
+	const chb_s_up = 0x1E;
+	const chb_c_up = 0x5A;
+	const chb_s_dn = 0x2D;
+	const chb_c_dn = 0x69;
+	const chb_keep = 0x0F;
+	
+	
+    let speedA = 0
+    let speedB = 0
+
+	let is_cha_back = false;
+	let is_chb_back = false;
+
+	//=================================================
+	//	列車Ａ　前進加速（１段階）
+	//=================================================
+	function handle_cha_Up() {
+		if (speedA < 6) {
+			speedA++;
+		}
+		for (int i = 0; i < 3; i++) {
+			control.waitMicros(80000);
+			sendByte(cha_s_up);
+		}
+		for (int i = 0; i < 10; i++) {
+			control.waitMicros(80000);
+			sendByte(cha_keep);
+		}
 	}
 
-	function mark(duration: number) {
-        // v2はハードPWMで高速かつ安定
-	    //if (control.hardwareVersion() == "2") {
-	        pins.analogSetPeriod(AnalogPin.P1, 26);
-	        pins.analogWritePin(AnalogPin.P1, 512);
-	        control.waitMicros(duration);
-	        pins.analogWritePin(AnalogPin.P1, 0);
-        // v1はソフトPWM
-	    //} else {
-	    //    softCarrier38kHz(duration);
-	    //}
+	//=================================================
+	//	列車Ｂ　前進加速（１段階）
+	//=================================================
+	function handle_chb_Up() {
+		if (speedB < 6) {
+			speedB++;
+		}
+		for (int i = 0; i < 3; i++) {
+			control.waitMicros(80000);
+			sendByte(chb_s_up);
+		}
+		for (int i = 0; i < 10; i++) {
+			control.waitMicros(80000);
+			sendByte(chb_keep);
+		}
 	}
 
-    function space(duration: number): void {
-        // v2はハードPWM
-	    //if (control.hardwareVersion() == "2") {
-	    
-	    
-	        pins.analogSetPeriod(AnalogPin.P1, 26);
-	        pins.analogWritePin(AnalogPin.P1, 0);
-        
-        
-        
-        
-        // v1はソフトPWM
-	    //} else {
-	    //    pins.digitalWritePin(DigitalPin.P1, 0);
-		//}
-        if (duration > 0) control.waitMicros(duration);
-    }
+	//=================================================
+	//	列車Ａ　前進加速（最高速まで連続）
+	//=================================================
+	function handle_cha_CUp() {
+		speedA = 6;
+		for (int i = 0; i < 3; i++) {
+			sendByte(cha_s_up);
+			control.waitMicros(80000);
+		}
+		for (int i = 0; i < 40; i++) {
+			sendByte(cha_c_up);
+			control.waitMicros(80000);
+		}
+		for (int i = 0; i < 5; i++) {
+			sendByte(cha_keep);
+			control.waitMicros(80000);
+		}
+	}
 
-    function sendBit(bit: number): void {
-        mark(400);
-        if (bit == 0x80)
-            space(800);
-        else
-            space(400);
-    }
+	//=================================================
+	//	列車Ｂ　前進加速（最高速まで連続）
+	//=================================================
+	function handle_chb_CUp() {
+		speedB = 6;
+		for (int i = 0; i < 3; i++) {
+			sendByte(chb_s_up);
+			control.waitMicros(80000);
+		}
+		for (int i = 0; i < 40; i++) {
+			sendByte(chb_c_up);
+			control.waitMicros(80000);
+		}
+		for (int i = 0; i < 5; i++) {
+			sendByte(chb_keep);
+			control.waitMicros(80000);
+		}
+	}
 
+	//=================================================
+	//	列車Ａ　前進減速（１段階）
+	//=================================================
+	function handle_cha_Down() {
+		if (speedA > 0) {
+			speedA--;
+		}
+		for (int i = 0; i < 3; i++) {
+			control.waitMicros(80000);
+			sendByte(cha_s_dn);
+		}
+		for (int i = 0; i < 10; i++) {
+			control.waitMicros(80000);
+			sendByte(cha_keep);
+		}
+	}
+
+	//=================================================
+	//	列車Ｂ　前進減速（１段階）
+	//=================================================
+	function handle_chb_Down() {
+		if (speedB > 0) {
+			speedB--;
+		}
+		for (int i = 0; i < 3; i++) {
+			control.waitMicros(80000);
+			sendByte(chb_s_dn);
+		}
+		for (int i = 0; i < 10; i++) {
+			control.waitMicros(80000);
+			sendByte(chb_keep);
+		}
+	}
+
+	//=================================================
+	//	列車Ａ　前進減速（停止まで連続）
+	//=================================================
+	function handle_cha_CDown() {
+		speedB = 6;
+		for (int i = 0; i < 3; i++) {
+			sendByte(cha_s_dn);
+			control.waitMicros(80000);
+		}
+		for (int i = 0; i < 25; i++) {
+			sendByte(cha_c_dn);
+			control.waitMicros(80000);
+		}
+		for (int i = 0; i < 10; i++) {
+			sendByte(cha_keep);
+			control.waitMicros(80000);
+		}
+	}
+
+	//=================================================
+	//	列車Ｂ　前進減速（停止まで連続）
+	//=================================================
+	function handle_chb_CDown() {
+		speedB = 6;
+		for (int i = 0; i < 3; i++) {
+			sendByte(chb_s_dn);
+			control.waitMicros(80000);
+		}
+		for (int i = 0; i < 25; i++) {
+			sendByte(chb_c_dn);
+			control.waitMicros(80000);
+		}
+		for (int i = 0; i < 10; i++) {
+			sendByte(chb_keep);
+			control.waitMicros(80000);
+		}
+	}
+
+	//=================================================
+	//	列車Ａ　後進開始
+	//=================================================
+	function handle_cha_Back_Start() {
+		for (int i = 0; i < 3; i++) {
+			sendByte(cha_s_dn);
+			control.waitMicros(80000);
+		}
+		is_cha_back = true;
+	}
+
+	//=================================================
+	//	列車Ａ　後進停止
+	//=================================================
+	function handle_cha_Back_End() {
+		for (int i = 0; i < 5; i++) {
+			sendByte(cha_keep);
+			control.waitMicros(80000);
+		}
+		is_cha_back = false;
+	}
+
+	//=================================================
+	//	列車Ｂ　後進開始
+	//=================================================
+	function handle_chb_Back_Start() {
+		for (int i = 0; i < 3; i++) {
+			sendByte(chb_s_dn);
+			control.waitMicros(80000);
+		}
+		is_chb_back = true;
+	}
+
+	//=================================================
+	//	列車Ｂ　後進停止
+	//=================================================
+	function handle_chb_Back_End() {
+		for (int i = 0; i < 5; i++) {
+			sendByte(chb_keep);
+			control.waitMicros(80000);
+		}
+		is_chb_back = false;
+	}
+
+	//=================================================
+	//	IR-LEDデータ送出
+	//=================================================
+	//-------------------------------------------------
+	//	１バイト送出
+	//-------------------------------------------------
     function sendByte(byteVal: number): void {
+        // プレアンブル
+        mark(9000);
+        space(4500);
+
         for (let i = 0; i < 8; i++) {
             sendBit(byteVal & 0x80);
             byteVal <<= 1;
         }
         mark(400);
+    }
+
+	//-------------------------------------------------
+	//	１ビット送出
+	//-------------------------------------------------
+    function sendBit(bit: number): void {
+        mark(400);
+        if (bit == 0x80)
+            space(1300);
+        else
+            space(480);
+    }
+
+	//-------------------------------------------------
+	//	mark送出（IR-LEF点灯）
+	//-------------------------------------------------
+	function mark(duration: number) {
+        pins.analogSetPeriod(AnalogPin.P1, 26);
+        pins.analogWritePin(AnalogPin.P1, 512);
+        control.waitMicros(duration);
+        pins.analogWritePin(AnalogPin.P1, 0);
+	}
+
+	//-------------------------------------------------
+	//	space送出（IR-LEF消灯）
+	//-------------------------------------------------
+    function space(duration: number): void {
+        pins.analogSetPeriod(AnalogPin.P1, 26);
+        pins.analogWritePin(AnalogPin.P1, 0);
     }
 
 
