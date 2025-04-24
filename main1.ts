@@ -351,7 +351,7 @@ namespace plarail {
 	//	１ビット送出
 	//-------------------------------------------------
     function sendBit(bit: number): void {
-        mark(900);
+        mark(800);
         if (bit == 0x01)
             space(1300);
         else
