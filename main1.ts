@@ -148,11 +148,11 @@ namespace plarail {
 		if (speedA < 6) {
 			speedA++;
 		}
-		for (int i = 0; i < 3; i++) {
+		for (let i = 0; i < 3; i++) {
 			control.waitMicros(80000);
 			sendByte(cha_s_up);
 		}
-		for (int i = 0; i < 10; i++) {
+		for (let i = 0; i < 10; i++) {
 			control.waitMicros(80000);
 			sendByte(cha_keep);
 		}
@@ -165,11 +165,11 @@ namespace plarail {
 		if (speedB < 6) {
 			speedB++;
 		}
-		for (int i = 0; i < 3; i++) {
+		for (let i = 0; i < 3; i++) {
 			control.waitMicros(80000);
 			sendByte(chb_s_up);
 		}
-		for (int i = 0; i < 10; i++) {
+		for (let i = 0; i < 10; i++) {
 			control.waitMicros(80000);
 			sendByte(chb_keep);
 		}
@@ -180,15 +180,15 @@ namespace plarail {
 	//=================================================
 	function handle_cha_CUp() {
 		speedA = 6;
-		for (int i = 0; i < 3; i++) {
+		for (let i = 0; i < 3; i++) {
 			sendByte(cha_s_up);
 			control.waitMicros(80000);
 		}
-		for (int i = 0; i < 40; i++) {
+		for (let i = 0; i < 40; i++) {
 			sendByte(cha_c_up);
 			control.waitMicros(80000);
 		}
-		for (int i = 0; i < 5; i++) {
+		for (let i = 0; i < 5; i++) {
 			sendByte(cha_keep);
 			control.waitMicros(80000);
 		}
@@ -199,15 +199,15 @@ namespace plarail {
 	//=================================================
 	function handle_chb_CUp() {
 		speedB = 6;
-		for (int i = 0; i < 3; i++) {
+		for (let i = 0; i < 3; i++) {
 			sendByte(chb_s_up);
 			control.waitMicros(80000);
 		}
-		for (int i = 0; i < 40; i++) {
+		for (let i = 0; i < 40; i++) {
 			sendByte(chb_c_up);
 			control.waitMicros(80000);
 		}
-		for (int i = 0; i < 5; i++) {
+		for (let i = 0; i < 5; i++) {
 			sendByte(chb_keep);
 			control.waitMicros(80000);
 		}
@@ -220,11 +220,11 @@ namespace plarail {
 		if (speedA > 0) {
 			speedA--;
 		}
-		for (int i = 0; i < 3; i++) {
+		for (let i = 0; i < 3; i++) {
 			control.waitMicros(80000);
 			sendByte(cha_s_dn);
 		}
-		for (int i = 0; i < 10; i++) {
+		for (let i = 0; i < 10; i++) {
 			control.waitMicros(80000);
 			sendByte(cha_keep);
 		}
@@ -237,11 +237,11 @@ namespace plarail {
 		if (speedB > 0) {
 			speedB--;
 		}
-		for (int i = 0; i < 3; i++) {
+		for (let i = 0; i < 3; i++) {
 			control.waitMicros(80000);
 			sendByte(chb_s_dn);
 		}
-		for (int i = 0; i < 10; i++) {
+		for (let i = 0; i < 10; i++) {
 			control.waitMicros(80000);
 			sendByte(chb_keep);
 		}
@@ -252,15 +252,15 @@ namespace plarail {
 	//=================================================
 	function handle_cha_CDown() {
 		speedB = 6;
-		for (int i = 0; i < 3; i++) {
+		for (let i = 0; i < 3; i++) {
 			sendByte(cha_s_dn);
 			control.waitMicros(80000);
 		}
-		for (int i = 0; i < 25; i++) {
+		for (let i = 0; i < 25; i++) {
 			sendByte(cha_c_dn);
 			control.waitMicros(80000);
 		}
-		for (int i = 0; i < 10; i++) {
+		for (let i = 0; i < 10; i++) {
 			sendByte(cha_keep);
 			control.waitMicros(80000);
 		}
@@ -271,15 +271,15 @@ namespace plarail {
 	//=================================================
 	function handle_chb_CDown() {
 		speedB = 6;
-		for (int i = 0; i < 3; i++) {
+		for (let i = 0; i < 3; i++) {
 			sendByte(chb_s_dn);
 			control.waitMicros(80000);
 		}
-		for (int i = 0; i < 25; i++) {
+		for (let i = 0; i < 25; i++) {
 			sendByte(chb_c_dn);
 			control.waitMicros(80000);
 		}
-		for (int i = 0; i < 10; i++) {
+		for (let i = 0; i < 10; i++) {
 			sendByte(chb_keep);
 			control.waitMicros(80000);
 		}
@@ -289,7 +289,7 @@ namespace plarail {
 	//	列車Ａ　後進開始
 	//=================================================
 	function handle_cha_Back_Start() {
-		for (int i = 0; i < 3; i++) {
+		for (let i = 0; i < 3; i++) {
 			sendByte(cha_s_dn);
 			control.waitMicros(80000);
 		}
@@ -300,7 +300,7 @@ namespace plarail {
 	//	列車Ａ　後進停止
 	//=================================================
 	function handle_cha_Back_End() {
-		for (int i = 0; i < 5; i++) {
+		for (let i = 0; i < 5; i++) {
 			sendByte(cha_keep);
 			control.waitMicros(80000);
 		}
@@ -311,7 +311,7 @@ namespace plarail {
 	//	列車Ｂ　後進開始
 	//=================================================
 	function handle_chb_Back_Start() {
-		for (int i = 0; i < 3; i++) {
+		for (let i = 0; i < 3; i++) {
 			sendByte(chb_s_dn);
 			control.waitMicros(80000);
 		}
@@ -322,7 +322,7 @@ namespace plarail {
 	//	列車Ｂ　後進停止
 	//=================================================
 	function handle_chb_Back_End() {
-		for (int i = 0; i < 5; i++) {
+		for (let i = 0; i < 5; i++) {
 			sendByte(chb_keep);
 			control.waitMicros(80000);
 		}
