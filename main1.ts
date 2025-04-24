@@ -374,6 +374,7 @@ namespace plarail {
     function space(duration: number): void {
         pins.analogSetPeriod(AnalogPin.P1, 26);
         pins.analogWritePin(AnalogPin.P1, 0);
+        control.waitMicros(duration);
     }
 
 
