@@ -341,8 +341,8 @@ namespace plarail {
         space(4500);
 
         for (let i = 0; i < 8; i++) {
-            sendBit(byteVal & 0x01);
-            byteVal >>= 1;
+            sendBit(byteVal & 0x80);
+            byteVal <<= 1;
         }
         mark(400);
     }
@@ -352,7 +352,7 @@ namespace plarail {
 	//-------------------------------------------------
     function sendBit(bit: number): void {
         mark(800);
-        if (bit == 0x01)
+        if (bit == 0x80)
             space(1300);
         else
             space(500);
