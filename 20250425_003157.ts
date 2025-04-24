@@ -85,18 +85,6 @@ namespace plarail {
 
 
 
-    //% blockId=plarail_stop_a
-    //% block="列車A 停止"
-    export function stopA(): void {
-        handle_cha_Stop();
-    }
-
-    //% blockId=plarail_stop_b
-    //% block="列車B 停止"
-    export function stopB(): void {
-        handle_chb_Stop();
-    }
-
     //% blockId=plarail_reverse_a
     //% block="列車A 後進開始"
     export function reverseA(): void {
@@ -169,18 +157,13 @@ namespace plarail {
 	const cha_c_up = 0xD2;			// 列車Ａ	レバー前倒し（連続）			最高速まで連続加速
 	const cha_s_dn = 0xA5;			// 列車Ａ	レバー手前倒し（１ショット）	１段階減速
 	const cha_c_dn = 0xE1;			// 列車Ａ	レバー手前倒し（連続）			停止まで連続減速
-	const cha_keep = 0x8E;			// 列車Ａ	レバー中立
-
-	const cha_stop = 0xB4;			// 列車Ａ	停止？
-	
+	const cha_keep = 0x87;			// 列車Ａ	レバー中立
 
 	const chb_s_up = 0x1E;			// 列車Ｂ	レバー前倒し（１ショット）		１段階加速
 	const chb_c_up = 0x5A;			// 列車Ｂ	レバー前倒し（連続）			最高速まで連続加速
 	const chb_s_dn = 0x2D;			// 列車Ｂ	レバー手前倒し（１ショット）	１段階減速
 	const chb_c_dn = 0x69;			// 列車Ｂ	レバー手前倒し（連続）			停止まで連続減速
 	const chb_keep = 0x0F;			// 列車Ｂ	レバー中立
-
-	const chb_stop = 0x3C;			// 列車Ｂ	停止？
 
 
     let speedA = 0
@@ -384,29 +367,6 @@ namespace plarail {
 		}
 		is_chb_back = false;
 	}
-
-	//=================================================
-	//	列車Ａ　停止
-	//=================================================
-	function handle_cha_Stop() {
-		for (let i = 0; i < 3; i++) {
-			sendByte(cha_stop);
-			control.waitMicros(80000);
-		}
-		is_cha_back = false;
-	}
-
-	//=================================================
-	//	列車Ｂ　停止
-	//=================================================
-	function handle_chb_Stop() {
-		for (let i = 0; i < 3; i++) {
-			sendByte(chb_stop);
-			control.waitMicros(80000);
-		}
-		is_chb_back = false;
-	}
-
 
 	//=================================================
 	//	IR-LEDデータ送出
