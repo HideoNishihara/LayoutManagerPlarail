@@ -352,7 +352,7 @@ namespace plarail {
 	//-------------------------------------------------
     function sendBit(bit: number): void {
         mark(400);
-        if (bit == 0x80)
+        if (bit == 0x01)
             space(1300);
         else
             space(480);
