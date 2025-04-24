@@ -351,11 +351,11 @@ namespace plarail {
 	//	１ビット送出
 	//-------------------------------------------------
     function sendBit(bit: number): void {
-        mark(400);
+        mark(900);
         if (bit == 0x01)
             space(1300);
         else
-            space(480);
+            space(500);
     }
 
 	//-------------------------------------------------
