@@ -321,10 +321,39 @@ namespace plarail {
         control.onEvent(EVT_IR, (sensor << 4) | DetectKind.Leave, handler)
     }
 
+	//===============================================
+	//	発車メロディ・ベルの再生
+	//===============================================
+    //% blockCombine
+    export enum DepartureSound {
+        //% block="発車メロディ"
+        Melody = 0,
+        //% block="発車ベル"
+        Bell = 1
+    }
 
+    //% block="発車サウンド %sound を再生する"
+    //% weight=90 color="#ffa500" icon="\uf028"
+    export function playDepartureSound(sound: DepartureSound): void {
+        let mainSound: music.Playable;
 
+        switch (sound) {
+            case DepartureSound.Melody:
+                mainSound = assets.soundDepartureMelody;
+                break;
+            case DepartureSound.Bell:
+                mainSound = assets.soundDepartureBell;
+                break;
+            default:
+                return; // 万一エラー時は何もしない
+        }
 
+        // まず発車メロディ or 発車ベル を再生
+        music.play(mainSound);
 
+        // 続けてアナウンスを再生
+        music.play(assets.soundAnnounce);
+    }
 
 
 
