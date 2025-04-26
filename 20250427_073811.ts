@@ -60,7 +60,7 @@ namespace plarail {
     //% draggableParameters
     //% weight=90
     export function onToggle(handler: (running: boolean) => void): void {
-        control.onEvent(EVT_TOGGLE, EventBusValue.MICROBIT_EVT_ANY, value => {
+        control.onEvent(EVT_TOGGLE, EventBusValue.MICROBIT_EVT_ANY, (value: number) => {
             handler(value == RunMode.Run)
         })
     }
@@ -92,7 +92,7 @@ namespace plarail {
     //% weight=890
 	export function driveForward(id: TrainID, speed: Speed): void {
 		// 列車Ａ
-		if (id == "A") {
+		if (id == TrainID.A) {
 			if (speedA == speed || speedA == -1) return;
 			//加速
 			if (speed < speedA) {
@@ -138,7 +138,7 @@ namespace plarail {
     //% weight=880
 	export function driveBack(id: TrainID, speed: SpeedBack): void {
 		// 列車Ａ
-		if (id == "A") {
+		if (id == TrainID.A) {
 			if (speedA != 0) return;
 			//後進
 			handle_cha_Back_Start();
@@ -160,7 +160,7 @@ namespace plarail {
     //% weight=700
 	export function driveStop(id: TrainID): void {
 		// 列車Ａ
-		if (id == "A") {
+		if (id == TrainID.A) {
 			if (speedA == 0) return;
 			//前進中
 			if (speedA > 0) {
@@ -192,7 +192,7 @@ namespace plarail {
     //% weight=690
 	export function driveForwardUp(id: TrainID): void {
 		// 列車Ａ
-		if (id == "A") {
+		if (id == TrainID.A) {
 			if (speedA == 6) return;
 			handle_cha_Up();
 			speedA++;
@@ -212,7 +212,7 @@ namespace plarail {
     //% weight=680
 	export function driveForwardDown(id: TrainID): void {
 		// 列車Ａ
-		if (id == "A") {
+		if (id == TrainID.A) {
 			if (speedA <= 0) return;
 			handle_cha_Down();
 			speedA--;
@@ -232,7 +232,7 @@ namespace plarail {
     //% weight=870
 	export function driveForwardUpToMax(id: TrainID): void {
 		// 列車Ａ
-		if (id == "A") {
+		if (id == TrainID.A) {
 			if (speedA == 6) return;
 			handle_cha_CUp();
 			speedA++;
@@ -438,7 +438,7 @@ namespace plarail {
     //		runMode==RunMode.Runの場合は、全列車停止
 	//=================================================
     pins.setPull(DigitalPin.P5, PinPullMode.PullUp)            // 内蔵プルアップ
-	input.onPinEvent(DigitalPin.P5, PinEventType.Fall, () => {
+	pins.onPulsed(DigitalPin.P5, PulseValue.Low, () => {
 		initVoltageCheck();
 
 	    // 簡易デバウンス
