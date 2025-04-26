@@ -1,4 +1,10 @@
 //% weight=100 color=#0fbc11 icon="\uf239" block="Layout Manager Plarail"
+declare namespace assets {
+    const soundDepartureMelody: music.Playable;
+    const soundDepartureBell: music.Playable;
+    const soundAnnounce: music.Playable;
+}
+
 namespace plarail {
 	// #################################################
 	//	定数・変数定義
@@ -60,9 +66,11 @@ namespace plarail {
     //% draggableParameters
     //% weight=90
     export function onToggle(handler: (running: boolean) => void): void {
-        control.onEvent(EVT_TOGGLE, EventBusValue.MICROBIT_EVT_ANY, (value: number) => {
-            handler(value == RunMode.Run)
-        })
+		control.onEvent(
+		    EVT_TOGGLE,
+		    EventBusValue.MICROBIT_EVT_ANY,
+		    function () { handler(runMode == RunMode.Run) }
+		);
     }
 
 	//===============================================
@@ -348,10 +356,10 @@ namespace plarail {
         }
 
         // まず発車メロディ or 発車ベル を再生
-        music.play(mainSound);
+        music.play(mainSound, music.PlayOptions.Synchronous);
 
         // 続けてアナウンスを再生
-        music.play(assets.soundAnnounce);
+        music.play(assets.soundAnnounce, music.PlayOptions.Synchronous);
     }
 
 
