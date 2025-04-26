@@ -613,18 +613,18 @@ namespace plarail {
 
         while (true) {
             /* 4-1. Leader の Hi (mark) を待つ */
-            let t = pins.pulseIn(PIN_IR, PulseValue.Low, 20_000)   // Low 時間 9 ms
+            let t = pins.pulseIn(PIN_IR, PulseValue.Low, 20000)   // Low 時間 9 ms
             if (!within(t, LEADER_MARK)) continue
 
             /* 4-2. Leader の Low (space) */
-            t = pins.pulseIn(PIN_IR, PulseValue.High, 10_000)      // Hi 時間 4.5 ms
+            t = pins.pulseIn(PIN_IR, PulseValue.High, 10000)      // Hi 時間 4.5 ms
             if (!within(t, LEADER_SPACE)) continue
 
             /* 4-3. 12bit 受信 : Hi (space) – Low (mark) */
             let bits = 0
             for (let i = 0; i < 12; i++) {
-                let space = pins.pulseIn(PIN_IR, PulseValue.Low, 3_000)   // 560 µs
-                let mark  = pins.pulseIn(PIN_IR, PulseValue.High, 3_000)  // 560 or 1690
+                let space = pins.pulseIn(PIN_IR, PulseValue.Low, 3000)   // 560 µs
+                let mark  = pins.pulseIn(PIN_IR, PulseValue.High, 3000)  // 560 or 1690
                 if (!within(space, 560)) { bits = -1; break }
 
                 if (within(mark, MARK_1)) bits |= 1 << i      // 1
