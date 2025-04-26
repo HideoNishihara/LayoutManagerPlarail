@@ -8,5 +8,10 @@
   "files": [
     "main.ts"
   ],
+  "assets": {
+    "soundDepartureMelody": "soundDepartureMelody",
+    "soundDepartureBell": "soundDepartureBell",
+    "soundAnnounce": "soundAnnounce"
+  },
   "preferredEditor": "tsprj"
 }

@@ -10,7 +10,6 @@ namespace plarail {
 	const RUN_SWITCH = DigitalPin.P5;			// Start/Stop ボタンポート（button A と共通）
 	const VOLTAGE_THRESHOLD = 2.4;				// 電圧警告スレッショルド（V）
 
-	let runMode = 0;							// 0=プログラム停止中、1=プログラム実行中
 	let doVoltageCheck = 0;						// 0=電圧監視未実施、1=電圧監視実施中
 	
     let speedA = 0;								// 列車Ａの速度（-1～6、-1=バック、0=停止、1～6=前進）
@@ -625,6 +624,29 @@ namespace plarail {
 			control.waitMicros(80000);
 		}
 	}
+	
+	//=================================================
+	//	全列車の停止
+	//=================================================
+	function stopAllTrains() {
+		//列車Ａ
+		if (speedA == -1) {
+			handle_cha_Back_End();
+		} else id (speedA > 0) {
+			handle_cha_CDown();
+		}
+		speedA = 0;
+		
+		//列車Ｂ
+		if (speedB == -1) {
+			handle_chb_Back_End();
+		} else id (speedB > 0) {
+			handle_chb_CDown();
+		}
+		speedB = 0;
+	}
+	
+	
 
 	//=================================================
     //	IR 受信デコード (バックグラウンド)
