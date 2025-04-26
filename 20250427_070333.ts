@@ -632,7 +632,7 @@ namespace plarail {
 		//列車Ａ
 		if (speedA == -1) {
 			handle_cha_Back_End();
-		} else id (speedA > 0) {
+		} else if (speedA > 0) {
 			handle_cha_CDown();
 		}
 		speedA = 0;
@@ -640,7 +640,7 @@ namespace plarail {
 		//列車Ｂ
 		if (speedB == -1) {
 			handle_chb_Back_End();
-		} else id (speedB > 0) {
+		} else if (speedB > 0) {
 			handle_chb_CDown();
 		}
 		speedB = 0;
