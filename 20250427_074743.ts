@@ -356,10 +356,10 @@ namespace plarail {
         }
 
         // まず発車メロディ or 発車ベル を再生
-        music.play(mainSound, music.PlayOptions.Synchronous);
+        music.play(mainSound);
 
         // 続けてアナウンスを再生
-        music.play(assets.soundAnnounce, music.PlayOptions.Synchronous);
+        music.play(assets.soundAnnounce);
     }
 
 
