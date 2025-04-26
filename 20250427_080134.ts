@@ -1,10 +1,10 @@
-//% weight=100 color=#0fbc11 icon="\uf239" block="Layout Manager Plarail"
 declare namespace assets {
     const soundDepartureMelody: music.Playable;
     const soundDepartureBell: music.Playable;
     const soundAnnounce: music.Playable;
 }
 
+//% weight=100 color=#0fbc11 icon="\uf239" block="Layout Manager Plarail"
 namespace plarail {
 	// #################################################
 	//	定数・変数定義
