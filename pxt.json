@@ -6,7 +6,8 @@
     "core": "*"
   },
   "files": [
-    "main.ts"
+    "main.ts",
+    "icon.png"
   ],
   "icon": "icon.png",
   "assets": {
