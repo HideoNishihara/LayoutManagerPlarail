@@ -8,6 +8,7 @@
   "files": [
     "main.ts"
   ],
+  "icon": "icon.png",
   "assets": {
     "soundDepartureMelody": "soundDepartureMelody",
     "soundDepartureBell": "soundDepartureBell",

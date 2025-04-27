@@ -449,7 +449,7 @@ namespace plarail {
 
 	        // ブロックへ通知 ── 走行開始時だけ
 	        if (runMode == RunMode.Run) {
-	            control.raiseEvent(EVT_TOGGLE)
+	            control.raiseEvent(EVT_TOGGLE, EventBusValue.MICROBIT_EVT_ANY)
             // 停止時はブロックを呼ばず、直接 全列車停止
 	        } else {
 	            stopAllTrains()
