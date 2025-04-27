@@ -42,7 +42,7 @@ namespace plarail {
 	// #################################################
 
 	//===============================================
-	//	電源電圧の監視
+	//	初期化（電圧監視とLED表示）
 	//===============================================
     //% blockId=plarail_init_monitor
     //% block="初期化（電圧監視とLED表示）"
@@ -63,7 +63,7 @@ namespace plarail {
     
     //% block="Start/Stopボタンが押されたとき"
     //% blockId=plarail_onToggle
-    //% weight=90
+    //% weight=800
 	export function onToggle(handler: () => void): void {
 		control.onEvent(
 		    EVT_TOGGLE,
@@ -72,181 +72,6 @@ namespace plarail {
 		);
     }
 
-	//===============================================
-	//	列車（Ａ or Ｂ）を、速度（１～６）で前進
-	//===============================================
-    export enum TrainID { A, B }
-    
-	export enum Speed {
-		//% block="１" enumval=1
-		S1 = 1,
-		//% block="２" enumval=2
-		S2 = 2,
-		//% block="３" enumval=3
-		S3 = 3,
-		//% block="４" enumval=4
-		S4 = 4,
-		//% block="５" enumval=5
-		S5 = 5,
-		//% block="６" enumval=6
-		S6 = 6
-	}
-    
-	//% block="列車 %id を 速度 %speed で前進"
-	//% inlineInputMode=inline
-    //% weight=890
-	export function driveForward(id: TrainID, speed: Speed): void {
-		// 列車Ａ
-		if (id == TrainID.A) {
-			if (speedA == speed || speedA == -1) return;
-			//加速
-			if (speed < speedA) {
-				for (let i = 0; i < speed - speedA; i++) {
-					handle_cha_Up();
-				}
-			//減速
-			} else {
-				for (let i = 0; i < speedA - speed; i++) {
-					handle_cha_Down();
-				}
-			}
-			speedA = speed;
-		// 列車Ｂ
-		} else {
-			if (speedB == speed || speedB == -1) return;
-			//加速
-			if (speed < speedB) {
-				for (let i = 0; i < speed - speedB; i++) {
-					handle_chb_Up();
-				}
-			//減速
-			} else {
-				for (let i = 0; i < speedB - speed; i++) {
-					handle_chb_Down();
-				}
-			}
-			speedB = speed;
-		}
-	}
-
-	//===============================================
-	//	列車（Ａ or Ｂ）を、後進
-	//===============================================
-	export enum SpeedBack {
-		//% block="３" enumval=3
-		S3 = 3,
-	}
-
-	//% block="列車 %id を 速度 %speedBack で後進"
-	//% inlineInputMode=inline
-    //% weight=880
-	export function driveBack(id: TrainID, speed: SpeedBack): void {
-		// 列車Ａ
-		if (id == TrainID.A) {
-			if (speedA != 0) return;
-			//後進
-			handle_cha_Back_Start();
-			speedA = -1;
-		// 列車Ｂ
-		} else {
-			if (speedB != 0) return;
-			//後進
-			handle_chb_Back_Start();
-			speedB = -1;
-		}
-	}
-
-	//===============================================
-	//	列車（Ａ or Ｂ）を、停止
-	//===============================================
-	//% block="列車 %id を 停止"
-	//% inlineInputMode=inline
-    //% weight=700
-	export function driveStop(id: TrainID): void {
-		// 列車Ａ
-		if (id == TrainID.A) {
-			if (speedA == 0) return;
-			//前進中
-			if (speedA > 0) {
-				handle_cha_CDown();
-			//後進中
-			} else {
-				handle_cha_Back_End();
-			}
-			speedA = 0;
-		// 列車Ｂ
-		} else {
-			if (speedB == 0) return;
-			//前進中
-			if (speedB > 0) {
-				handle_chb_CDown();
-			//後進中
-			} else {
-				handle_chb_Back_End();
-			}
-			speedB = 0;
-		}
-	}
-
-	//===============================================
-	//	列車（Ａ or Ｂ）を、前進加速
-	//===============================================
-	//% block="列車 %id を 前進加速"
-	//% inlineInputMode=inline
-    //% weight=690
-	export function driveForwardUp(id: TrainID): void {
-		// 列車Ａ
-		if (id == TrainID.A) {
-			if (speedA == 6) return;
-			handle_cha_Up();
-			speedA++;
-		// 列車Ｂ
-		} else {
-			if (speedB == 6) return;
-			handle_chb_Up();
-			speedB++;
-		}
-	}
-
-	//===============================================
-	//	列車（Ａ or Ｂ）を、前進減速
-	//===============================================
-	//% block="列車 %id を 前進減速"
-	//% inlineInputMode=inline
-    //% weight=680
-	export function driveForwardDown(id: TrainID): void {
-		// 列車Ａ
-		if (id == TrainID.A) {
-			if (speedA <= 0) return;
-			handle_cha_Down();
-			speedA--;
-		// 列車Ｂ
-		} else {
-			if (speedB <= 0) return;
-			handle_chb_Down();
-			speedB--;
-		}
-	}
-
-	//===============================================
-	//	列車（Ａ or Ｂ）を、最高速度（6）まで加速
-	//===============================================
-	//% block="列車 %id を 前進加速（最高速度まで）"
-	//% inlineInputMode=inline
-    //% weight=870
-	export function driveForwardUpToMax(id: TrainID): void {
-		// 列車Ａ
-		if (id == TrainID.A) {
-			if (speedA == 6) return;
-			handle_cha_CUp();
-			speedA++;
-		// 列車Ｂ
-		} else {
-			if (speedB == 6) return;
-			handle_chb_CUp();
-			speedB++;
-		}
-	}
 
 	//===============================================
 	//	センサー %sensor で先頭車両を検出したとき（磁気センサー：コマンド=2）
@@ -322,6 +147,182 @@ namespace plarail {
     }
 
 	//===============================================
+	//	列車（Ａ or Ｂ）を、速度（１～６）で前進
+	//===============================================
+    export enum TrainID { A, B }
+    
+	export enum Speed {
+		//% block="１" enumval=1
+		S1 = 1,
+		//% block="２" enumval=2
+		S2 = 2,
+		//% block="３" enumval=3
+		S3 = 3,
+		//% block="４" enumval=4
+		S4 = 4,
+		//% block="５" enumval=5
+		S5 = 5,
+		//% block="６" enumval=6
+		S6 = 6
+	}
+    
+	//% block="列車 %id を 速度 %speed で前進"
+	//% inlineInputMode=inline
+    //% weight=690
+	export function driveForward(id: TrainID, speed: Speed): void {
+		// 列車Ａ
+		if (id == TrainID.A) {
+			if (speedA == speed || speedA == -1) return;
+			//加速
+			if (speed < speedA) {
+				for (let i = 0; i < speed - speedA; i++) {
+					handle_cha_Up();
+				}
+			//減速
+			} else {
+				for (let i = 0; i < speedA - speed; i++) {
+					handle_cha_Down();
+				}
+			}
+			speedA = speed;
+		// 列車Ｂ
+		} else {
+			if (speedB == speed || speedB == -1) return;
+			//加速
+			if (speed < speedB) {
+				for (let i = 0; i < speed - speedB; i++) {
+					handle_chb_Up();
+				}
+			//減速
+			} else {
+				for (let i = 0; i < speedB - speed; i++) {
+					handle_chb_Down();
+				}
+			}
+			speedB = speed;
+		}
+	}
+
+	//===============================================
+	//	列車（Ａ or Ｂ）を、後進
+	//===============================================
+	export enum SpeedBack {
+		//% block="３" enumval=3
+		S3 = 3,
+	}
+
+	//% block="列車 %id を 速度 %speedBack で後進"
+	//% inlineInputMode=inline
+    //% weight=680
+	export function driveBack(id: TrainID, speed: SpeedBack): void {
+		// 列車Ａ
+		if (id == TrainID.A) {
+			if (speedA != 0) return;
+			//後進
+			handle_cha_Back_Start();
+			speedA = -1;
+		// 列車Ｂ
+		} else {
+			if (speedB != 0) return;
+			//後進
+			handle_chb_Back_Start();
+			speedB = -1;
+		}
+	}
+
+	//===============================================
+	//	列車（Ａ or Ｂ）を、停止
+	//===============================================
+	//% block="列車 %id を 停止"
+	//% inlineInputMode=inline
+    //% weight=670
+	export function driveStop(id: TrainID): void {
+		// 列車Ａ
+		if (id == TrainID.A) {
+			if (speedA == 0) return;
+			//前進中
+			if (speedA > 0) {
+				handle_cha_CDown();
+			//後進中
+			} else {
+				handle_cha_Back_End();
+			}
+			speedA = 0;
+		// 列車Ｂ
+		} else {
+			if (speedB == 0) return;
+			//前進中
+			if (speedB > 0) {
+				handle_chb_CDown();
+			//後進中
+			} else {
+				handle_chb_Back_End();
+			}
+			speedB = 0;
+		}
+	}
+
+	//===============================================
+	//	列車（Ａ or Ｂ）を、前進加速
+	//===============================================
+	//% block="列車 %id を 前進加速"
+	//% inlineInputMode=inline
+    //% weight=660
+	export function driveForwardUp(id: TrainID): void {
+		// 列車Ａ
+		if (id == TrainID.A) {
+			if (speedA == 6) return;
+			handle_cha_Up();
+			speedA++;
+		// 列車Ｂ
+		} else {
+			if (speedB == 6) return;
+			handle_chb_Up();
+			speedB++;
+		}
+	}
+
+	//===============================================
+	//	列車（Ａ or Ｂ）を、前進減速
+	//===============================================
+	//% block="列車 %id を 前進減速"
+	//% inlineInputMode=inline
+    //% weight=650
+	export function driveForwardDown(id: TrainID): void {
+		// 列車Ａ
+		if (id == TrainID.A) {
+			if (speedA <= 0) return;
+			handle_cha_Down();
+			speedA--;
+		// 列車Ｂ
+		} else {
+			if (speedB <= 0) return;
+			handle_chb_Down();
+			speedB--;
+		}
+	}
+
+	//===============================================
+	//	列車（Ａ or Ｂ）を、最高速度（6）まで加速
+	//===============================================
+	//% block="列車 %id を 前進加速（最高速度まで）"
+	//% inlineInputMode=inline
+    //% weight=640
+	export function driveForwardUpToMax(id: TrainID): void {
+		// 列車Ａ
+		if (id == TrainID.A) {
+			if (speedA == 6) return;
+			handle_cha_CUp();
+			speedA++;
+		// 列車Ｂ
+		} else {
+			if (speedB == 6) return;
+			handle_chb_CUp();
+			speedB++;
+		}
+	}
+
+	//===============================================
 	//	発車メロディ・ベルの再生
 	//===============================================
     export enum DepartureSound {
@@ -333,7 +334,7 @@ namespace plarail {
 
     //% block="発車サウンド %sound を再生する"
     //% blockId=plarail_sound
-    //% weight=90
+    //% weight=500
     export function playDepartureSound(sound: DepartureSound): void {
         let mainSound: music.Playable;
 
@@ -456,6 +457,39 @@ namespace plarail {
 	        }
 	    }
 	})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	//=================================================
 	//	列車Ａ　前進加速（１段階）
