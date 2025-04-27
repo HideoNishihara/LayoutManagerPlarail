@@ -119,7 +119,7 @@ namespace plarail {
     const EVT_IR = 4000      // channel
     /** value = (sensorID<<4) | kind  とする (上位4bit:ID / 下位4bit:種別) */
 
-    //% block="センサー %sensor で 先頭車両 を検出したとき"
+    //% block=" %sensor で 先頭車両 を検出したとき"
     //% blockId=plarail_onHead
     //% weight=790
     export function onHead(sensor: SensorID, handler: () => void) {
@@ -129,7 +129,7 @@ namespace plarail {
 	//===============================================
     //	センサー %sensor で 列車 を検出したとき（照度センサー：コマンド=1）
 	//===============================================
-    //% block="センサー %sensor で 列車 を検出したとき"
+    //% block=" %sensor で 列車 を検出したとき"
     //% blockId=plarail_onDetect
     //% weight=780
     export function onDetect(sensor: SensorID, handler: () => void) {
@@ -139,7 +139,7 @@ namespace plarail {
 	//===============================================
     //	センサー %sensor で 列車離脱 を検出したとき（照度センサー：コマンド=0）
 	//===============================================
-    //% block="センサー %sensor で 列車離脱 を検出したとき"
+    //% block=" %sensor で 列車離脱 を検出したとき"
     //% blockId=plarail_onLeave
     //% weight=770
     export function onLeave(sensor: SensorID, handler: () => void) {
@@ -149,7 +149,6 @@ namespace plarail {
 	//===============================================
 	//	列車（Ａ or Ｂ）を、速度（１～６）で前進
 	//===============================================
-	//% block="列車ID選択"
 	export enum TrainID {
 	    //% block="列車 Ａ"
 	    A = 1,
@@ -157,7 +156,6 @@ namespace plarail {
 	    B = 2
 	}
 	
-	//% block="列車速度選択"
 	export enum Speed {
 		//% block="速度１（とても遅い）"
 		S1 = 1,
@@ -213,7 +211,6 @@ namespace plarail {
 	//===============================================
 	//	列車（Ａ or Ｂ）を、後進
 	//===============================================
-	//% block="後進速度選択"
 	export enum SpeedBack {
 		//% block="３" enumval=3
 		S3 = 3
@@ -333,7 +330,6 @@ namespace plarail {
 	//===============================================
 	//	発車メロディ・ベルの再生
 	//===============================================
-	//% block="サウンド選択"
 	export enum DepartureMelody {
 	    //% block="JR東日本"
 	    JR,
