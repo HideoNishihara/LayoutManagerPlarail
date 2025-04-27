@@ -13,7 +13,7 @@ namespace plarail {
 	const BLUE_LED = DigitalPin.P15;			// 青色LEDのポート
 	const IR_LED = AnalogPin.P1;				// IR-LEDのポート
 	const VOLTAGE_PIN = AnalogPin.P2;			// 電圧測定用のポート
-	const RUN_SWITCH = DigitalPin.P5;			// Start/Stop ボタンポート（button A と共通）
+	const RUN_SWITCH = DigitalPin.P8;			// Start/Stop ボタンポート（button A と共通）
 	const VOLTAGE_THRESHOLD = 2.4;				// 電圧警告スレッショルド（V）
 
 	let doVoltageCheck = 0;						// 0=電圧監視未実施、1=電圧監視実施中
@@ -52,7 +52,7 @@ namespace plarail {
     }
 
 	//===============================================
-	//	Start/Stopボタン（or buttonA）の押下時の処理（runMode==RunMode.Runの場合のみ）
+	//	Start/Stopボタンの押下時の処理（runMode==RunMode.Runの場合のみ）
     // 		タクトスイッチ(P5)が押され runMode が切り替わったとき
     //		@param handler running が true なら走行開始 / false なら停止
 	//===============================================
