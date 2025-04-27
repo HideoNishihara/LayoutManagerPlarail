@@ -325,8 +325,7 @@ namespace plarail {
 	//===============================================
 	//	発車メロディ・ベルの再生
 	//===============================================
-	//% block="発車メロディ選択"
-	enum DepartureMelody {
+	export　enum DepartureMelody {
 	    //% block="JR東日本"
 	    JR,
 	    //% block="京急"
