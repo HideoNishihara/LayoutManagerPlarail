@@ -10,10 +10,5 @@
     "icon.png"
   ],
   "icon": "icon.png",
-  "assets": {
-    "soundDepartureMelody": "soundDepartureMelody",
-    "soundDepartureBell": "soundDepartureBell",
-    "soundAnnounce": "soundAnnounce"
-  },
   "preferredEditor": "tsprj"
 }

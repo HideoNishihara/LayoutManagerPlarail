@@ -325,37 +325,35 @@ namespace plarail {
 	//===============================================
 	//	発車メロディ・ベルの再生
 	//===============================================
-    export enum DepartureSound {
-        //% block="発車メロディ"
-        Melody = 0,
-        //% block="発車ベル"
-        Bell = 1
-    }
+	enum DepartureMelody {
+	    //% block="JR東日本"
+	    JR,
+	    //% block="京急"
+	    Keikyu,
+	    //% block="阪急"
+	    Hankyu,
+	    //% block="小田急"
+	    Odakyu
+	}
 
-    //% block="発車サウンド %sound を再生する"
-    //% blockId=plarail_sound
-    //% weight=500
-    export function playDepartureSound(sound: DepartureSound): void {
-        let mainSound: music.Playable;
-
-        switch (sound) {
-            case DepartureSound.Melody:
-                mainSound = assets.soundDepartureMelody;
-                break;
-            case DepartureSound.Bell:
-                mainSound = assets.soundDepartureBell;
-                break;
-            default:
-                return; // 万一エラー時は何もしない
-        }
-
-        // まず発車メロディ or 発車ベル を再生
-        music.play(mainSound, music.PlaybackMode.UntilDone);
-
-        // 続けてアナウンスを再生
-        music.play(assets.soundAnnounce, music.PlaybackMode.UntilDone);
-    }
-
+	//% block="発車メロディを再生 | %melody"
+	//% weight=500
+	export function playDepartureMelodySelect(melody: DepartureMelody): void {
+	    switch (melody) {
+	        case DepartureMelody.JR:
+	            music.playMelody("E4 A4 D5 G4 E4 C5 B4 G4", 120)
+	            break
+	        case DepartureMelody.Keikyu:
+	            music.playMelody("G5 A5 B5 C6 B5 A5 G5 E5", 160)
+	            break
+	        case DepartureMelody.Hankyu:
+	            music.playMelody("C5 E5 G5 C6 G5 E5 C5", 100)
+	            break
+	        case DepartureMelody.Odakyu:
+	            music.playMelody("C5 E5 G5 B5 A5 G5 E5 C5", 100)
+	            break
+	    }
+	}
 
 
 
