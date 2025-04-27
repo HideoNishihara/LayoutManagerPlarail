@@ -4,7 +4,7 @@ declare namespace assets {
     const soundAnnounce: music.Playable;
 }
 
-//% weight=100 color=#0fbc11 icon="\uf239" block="Layout Manager Plarail"
+//% weight=100 color=#003366 icon="\uf239" block="Layout Manager Plarail"
 namespace plarail {
 	// #################################################
 	//	定数・変数定義
