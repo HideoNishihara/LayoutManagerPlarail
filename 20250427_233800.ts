@@ -63,7 +63,6 @@ namespace plarail {
     
     //% block="Start/Stopボタンが押されたとき"
     //% blockId=plarail_onToggle
-    //% draggableParameters
     //% weight=90
     export function onToggle(handler: (running: boolean) => void): void {
 		control.onEvent(
