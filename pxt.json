@@ -2,6 +2,8 @@
   "name": "layout-manager-template",
   "version": "0.0.2",
   "description": "Layout Manager Plarail test block",
+  "target": "microbit",
+  "targetVersion": "3.0.0",
   "dependencies": {
     "core": "*"
   },
