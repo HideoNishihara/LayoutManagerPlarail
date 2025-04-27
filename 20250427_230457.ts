@@ -61,7 +61,7 @@ namespace plarail {
     
     const EVT_TOGGLE = 3000  					// P5 押下で runMode が切り替わったとき
     
-    //% block="Start/Stopボタンが押されたとき (状態 $running)"
+    //% block="Start/Stopボタンが押されたとき"
     //% blockId=plarail_onToggle
     //% draggableParameters
     //% weight=90
@@ -340,7 +340,8 @@ namespace plarail {
     }
 
     //% block="発車サウンド %sound を再生する"
-    //% weight=90 color="#ffa500" icon="\uf028"
+    //% blockId=plarail_sound
+    //% weight=90
     export function playDepartureSound(sound: DepartureSound): void {
         let mainSound: music.Playable;
 
