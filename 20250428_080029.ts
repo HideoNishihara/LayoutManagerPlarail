@@ -149,24 +149,31 @@ namespace plarail {
 	//===============================================
 	//	列車（Ａ or Ｂ）を、速度（１～６）で前進
 	//===============================================
-    export enum TrainID { A, B }
-    
+	//% block="列車ID選択"
+	export enum TrainID {
+	    //% block="列車 Ａ"
+	    A = 1,
+	    //% block="列車 Ｂ"
+	    B = 2
+	}
+	
+	//% block="列車速度選択"
 	export enum Speed {
-		//% block="１" enumval=1
+		//% block="速度１（とても遅い）"
 		S1 = 1,
-		//% block="２" enumval=2
+		//% block="速度２（遅い）"
 		S2 = 2,
-		//% block="３" enumval=3
+		//% block="速度３（やや遅い）"
 		S3 = 3,
-		//% block="４" enumval=4
+		//% block="速度４（中くらい）"
 		S4 = 4,
-		//% block="５" enumval=5
+		//% block="速度５（速い）"
 		S5 = 5,
-		//% block="６" enumval=6
+		//% block="速度６（とても速い）"
 		S6 = 6
 	}
     
-	//% block="列車 %id を 速度 %speed で前進"
+	//% block=" %id を %speed で前進"
 	//% inlineInputMode=inline
     //% weight=690
 	export function driveForward(id: TrainID, speed: Speed): void {
@@ -174,7 +181,7 @@ namespace plarail {
 		if (id == TrainID.A) {
 			if (speedA == speed || speedA == -1) return;
 			//加速
-			if (speed < speedA) {
+			if (speed > speedA) {
 				for (let i = 0; i < speed - speedA; i++) {
 					handle_cha_Up();
 				}
@@ -206,15 +213,16 @@ namespace plarail {
 	//===============================================
 	//	列車（Ａ or Ｂ）を、後進
 	//===============================================
+	//% block="後進速度選択"
 	export enum SpeedBack {
 		//% block="３" enumval=3
-		S3 = 3,
+		S3 = 3
 	}
 
-	//% block="列車 %id を 速度 %speedBack で後進"
+	//% block=" %id を %speedBack で後進"
 	//% inlineInputMode=inline
     //% weight=680
-	export function driveBack(id: TrainID, speed: SpeedBack): void {
+	export function driveBack(id: TrainID, speedBack: SpeedBack): void {
 		// 列車Ａ
 		if (id == TrainID.A) {
 			if (speedA != 0) return;
@@ -233,7 +241,7 @@ namespace plarail {
 	//===============================================
 	//	列車（Ａ or Ｂ）を、停止
 	//===============================================
-	//% block="列車 %id を 停止"
+	//% block=" %id を 停止"
 	//% inlineInputMode=inline
     //% weight=670
 	export function driveStop(id: TrainID): void {
@@ -265,7 +273,7 @@ namespace plarail {
 	//===============================================
 	//	列車（Ａ or Ｂ）を、前進加速
 	//===============================================
-	//% block="列車 %id を 前進加速"
+	//% block=" %id を 前進加速（１段階）"
 	//% inlineInputMode=inline
     //% weight=660
 	export function driveForwardUp(id: TrainID): void {
@@ -285,7 +293,7 @@ namespace plarail {
 	//===============================================
 	//	列車（Ａ or Ｂ）を、前進減速
 	//===============================================
-	//% block="列車 %id を 前進減速"
+	//% block=" %id を 前進減速（１段階）"
 	//% inlineInputMode=inline
     //% weight=650
 	export function driveForwardDown(id: TrainID): void {
@@ -303,9 +311,9 @@ namespace plarail {
 	}
 
 	//===============================================
-	//	列車（Ａ or Ｂ）を、最高速度（6）まで加速
+	//	列車（Ａ or Ｂ）を、最高速度（６）まで加速
 	//===============================================
-	//% block="列車 %id を 前進加速（最高速度まで）"
+	//% block=" %id を 前進加速（最高速度まで）"
 	//% inlineInputMode=inline
     //% weight=640
 	export function driveForwardUpToMax(id: TrainID): void {
@@ -325,7 +333,8 @@ namespace plarail {
 	//===============================================
 	//	発車メロディ・ベルの再生
 	//===============================================
-	export　enum DepartureMelody {
+	//% block="サウンド選択"
+	export enum DepartureMelody {
 	    //% block="JR東日本"
 	    JR,
 	    //% block="京急"
@@ -337,6 +346,7 @@ namespace plarail {
 	}
 
 	//% block="発車メロディを再生 | %melody"
+	//% inlineInputMode=inline
 	//% weight=500
 	export function playDepartureMelodySelect(melody: DepartureMelody): void {
 	    switch (melody) {
