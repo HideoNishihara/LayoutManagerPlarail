@@ -10,6 +10,9 @@
   "files": [
     "main.ts"
   ],
-  "icon": "https://github.com/HideoNishihara/icon.png",
-  "preferredEditor": "tsprj"
+  "icon": "icon.png",
+  "preferredEditor": "tsprj",
+  "simulator": {
+    "autoRun": true
+  }
 }
