@@ -64,11 +64,11 @@ namespace plarail {
     //% block="Start/Stopボタンが押されたとき"
     //% blockId=plarail_onToggle
     //% weight=90
-    export function onToggle(handler: (running: boolean) => void): void {
+	export function onToggle(handler: () => void): void {
 		control.onEvent(
 		    EVT_TOGGLE,
 		    EventBusValue.MICROBIT_EVT_ANY,
-		    function () { handler(runMode == RunMode.Run) }
+		    function () { handler() }
 		);
     }
 
@@ -132,7 +132,6 @@ namespace plarail {
 	//===============================================
 	//	列車（Ａ or Ｂ）を、後進
 	//===============================================
-    //% blockCombine
 	export enum SpeedBack {
 		//% block="３" enumval=3
 		S3 = 3,
@@ -253,7 +252,6 @@ namespace plarail {
 	//	センサー %sensor で先頭車両を検出したとき（磁気センサー：コマンド=2）
 	//===============================================
     // センサーID（0〜15）をプルダウンで指定するための列挙型
-    //% blockCombine
     export enum SensorID {
         //% block="センサー0"
         ID0 = 0,
@@ -290,7 +288,6 @@ namespace plarail {
     }
     
     // 検出種別
-    //% blockCombine
     export enum DetectKind { Leave = 0, Detect = 1, Head = 2 }
 
     // 独自イベント番号
@@ -299,7 +296,6 @@ namespace plarail {
 
     //% block="センサー %sensor で 先頭車両 を検出したとき"
     //% blockId=plarail_onHead
-    //% draggableParameters
     //% weight=790
     export function onHead(sensor: SensorID, handler: () => void) {
         control.onEvent(EVT_IR, (sensor << 4) | DetectKind.Head, handler)
@@ -310,7 +306,6 @@ namespace plarail {
 	//===============================================
     //% block="センサー %sensor で 列車 を検出したとき"
     //% blockId=plarail_onDetect
-    //% draggableParameters
     //% weight=780
     export function onDetect(sensor: SensorID, handler: () => void) {
         control.onEvent(EVT_IR, (sensor << 4) | DetectKind.Detect, handler)
@@ -321,7 +316,6 @@ namespace plarail {
 	//===============================================
     //% block="センサー %sensor で 列車離脱 を検出したとき"
     //% blockId=plarail_onLeave
-    //% draggableParameters
     //% weight=770
     export function onLeave(sensor: SensorID, handler: () => void) {
         control.onEvent(EVT_IR, (sensor << 4) | DetectKind.Leave, handler)
@@ -330,14 +324,13 @@ namespace plarail {
 	//===============================================
 	//	発車メロディ・ベルの再生
 	//===============================================
-    //% blockCombine
     export enum DepartureSound {
         //% block="発車メロディ"
         Melody = 0,
         //% block="発車ベル"
         Bell = 1
     }
-/*
+
     //% block="発車サウンド %sound を再生する"
     //% blockId=plarail_sound
     //% weight=90
@@ -361,7 +354,6 @@ namespace plarail {
         // 続けてアナウンスを再生
         music.play(assets.soundAnnounce, music.PlaybackMode.UntilDone);
     }
-*/
 
 
 
@@ -457,7 +449,7 @@ namespace plarail {
 
 	        // ブロックへ通知 ── 走行開始時だけ
 	        if (runMode == RunMode.Run) {
-	            control.raiseEvent(EVT_TOGGLE, runMode)
+	            control.raiseEvent(EVT_TOGGLE)
             // 停止時はブロックを呼ばず、直接 全列車停止
 	        } else {
 	            stopAllTrains()
