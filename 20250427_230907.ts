@@ -338,7 +338,7 @@ namespace plarail {
         //% block="発車ベル"
         Bell = 1
     }
-
+/*
     //% block="発車サウンド %sound を再生する"
     //% blockId=plarail_sound
     //% weight=90
@@ -362,7 +362,7 @@ namespace plarail {
         // 続けてアナウンスを再生
         music.play(assets.soundAnnounce, music.PlaybackMode.UntilDone);
     }
-
+*/
 
 
 
