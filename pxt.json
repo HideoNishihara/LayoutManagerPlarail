@@ -8,9 +8,8 @@
     "core": "*"
   },
   "files": [
-    "main.ts",
-    "icon.png"
+    "main.ts"
   ],
-  "icon": "icon.png",
+  "icon": "https://github.com/HideoNishihara/icon.png",
   "preferredEditor": "tsprj"
 }
