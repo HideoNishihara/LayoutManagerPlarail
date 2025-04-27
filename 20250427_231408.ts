@@ -76,10 +76,8 @@ namespace plarail {
 	//===============================================
 	//	列車（Ａ or Ｂ）を、速度（１～６）で前進
 	//===============================================
-    //% blockCombine
     export enum TrainID { A, B }
     
-    //% blockCombine
 	export enum Speed {
 		//% block="１" enumval=1
 		S1 = 1,
@@ -256,6 +254,7 @@ namespace plarail {
 	//	センサー %sensor で先頭車両を検出したとき（磁気センサー：コマンド=2）
 	//===============================================
     // センサーID（0〜15）をプルダウンで指定するための列挙型
+    //% blockCombine
     export enum SensorID {
         //% block="センサー0"
         ID0 = 0,
@@ -292,6 +291,7 @@ namespace plarail {
     }
     
     // 検出種別
+    //% blockCombine
     export enum DetectKind { Leave = 0, Detect = 1, Head = 2 }
 
     // 独自イベント番号
