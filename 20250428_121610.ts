@@ -365,15 +365,9 @@ namespace plarail {
 	            music.playMelody("E5 G5 B5 R4 D5 G5 B5 R4 G5 B5 E6", 250);
 	            break;
 	        case DepartureMelody.TetudouSyouka:
-			    // 発車チャイム（ピンポーン風）
-			    music.setTempo(300)
-			    music.playTone(Note.C5, music.beat(BeatFraction.Half))
-			    music.playTone(Note.G4, music.beat(BeatFraction.Whole))
-			    music.rest(music.beat(BeatFraction.Whole)) // 少し間をあける
-
 			    // 鉄道唱歌（汽笛一声 新橋を〜）
-			    music.setTempo(120)
-			    music.playMelody("G4:2 G4:2 A4:2 B4:2 C5:4 B4:2 A4:2 G4:4", 120);
+				music.setTempo(100);
+				music.playMelody("F#4:2 G4:2 A4:4 B4:2 C5:2 D5:4 D5:2 E5:2 F#5:4 F#5:2 G5:2 A5:4 G5:2 F#5:2 E5:4 F#5:4", 100);
 	            break;
 	    }
    	}
