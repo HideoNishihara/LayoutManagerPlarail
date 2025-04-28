@@ -442,13 +442,13 @@ namespace plarail {
     //		runMode==RunMode.Runの場合は、onToggleブロック処理へ
     //		runMode==RunMode.Runの場合は、全列車停止
 	//=================================================
-    pins.setPull(DigitalPin.P5, PinPullMode.PullUp)            // 内蔵プルアップ
-	pins.onPulsed(DigitalPin.P5, PulseValue.Low, () => {
+    pins.setPull(RUN_SWITCH, PinPullMode.PullUp)            // 内蔵プルアップ
+	pins.onPulsed(RUN_SWITCH, PulseValue.Low, () => {
 		initVoltageCheck();
 
 	    // 簡易デバウンス
 	    control.waitMicros(20000)
-	    if (pins.digitalReadPin(DigitalPin.P5) == 0) {       // まだ Low か確認
+	    if (pins.digitalReadPin(RUN_SWITCH) == 0) {       // まだ Low か確認
 	        // runMode をトグル
 	        runMode = runMode == RunMode.Stop ? RunMode.Run : RunMode.Stop
 
