@@ -247,7 +247,10 @@ namespace plarail {
 			if (speedA == 0) return;
 			//前進中
 			if (speedA > 0) {
-				handle_cha_CDown();
+				//handle_cha_CDown();
+				for (let i = 0; i < speedA; i++) {
+					handle_cha_Down();
+				}
 			//後進中
 			} else {
 				handle_cha_Back_End();
@@ -258,7 +261,10 @@ namespace plarail {
 			if (speedB == 0) return;
 			//前進中
 			if (speedB > 0) {
-				handle_chb_CDown();
+				//handle_chb_CDown();
+				for (let i = 0; i < speedB; i++) {
+					handle_chb_Down();
+				}
 			//後進中
 			} else {
 				handle_chb_Back_End();
