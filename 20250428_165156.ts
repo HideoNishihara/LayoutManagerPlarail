@@ -384,7 +384,7 @@ namespace plarail {
 				music.setVolume(255)
 				for (let vol = 255; vol >= 0; vol -= 20) {
 				    music.setVolume(vol)
-				    music.playTone(Note.E6, music.beat(BeatFraction.Sixteenth))
+				    music.playTone(1319, music.beat(BeatFraction.Sixteenth))
 				}
 				music.stopAllSounds()
 				break;
@@ -400,7 +400,7 @@ namespace plarail {
 				music.setVolume(255)
 				for (let vol = 255; vol >= 0; vol -= 20) {
 				    music.setVolume(vol)
-				    music.playTone(Note.D7, music.beat(BeatFraction.Sixteenth))
+				    music.playTone(2349, music.beat(BeatFraction.Sixteenth))
 				}
 				music.stopAllSounds()
 	            break;
