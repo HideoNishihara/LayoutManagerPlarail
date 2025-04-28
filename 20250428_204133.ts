@@ -817,6 +817,7 @@ namespace plarail {
             control.raiseEvent(EVT_IR, value)
         }
     })
+*/
 
 	//-------------------------------------------------
     //	ユーティリティ
@@ -826,7 +827,6 @@ namespace plarail {
         return x > target - TOL && x < target + TOL
     }
 
-*/
 
 
 
