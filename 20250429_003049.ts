@@ -836,9 +836,13 @@ namespace plarail {
 	// IR受信デコード（バックグラウンド＋シリアル出力付き版）
 	//===============================================
 	control.inBackground(function () {
+   		serial.writeLine("IR receive...");
+
 	    pins.setPull(DigitalPin.P16, PinPullMode.PullUp);
 
 	    while (true) {
+    		serial.writeLine("IR receive start");
+
 	        // 赤外線センサからの LOWパルス（Leader Mark）を待つ（最大20ms待機）
 	        let t = pins.pulseIn(DigitalPin.P16, PulseValue.Low, 20000);
 	        // 受信したLowパルスの長さが9ms(LEADER_MARK)付近か確認（なければ次のループへ）
