@@ -775,6 +775,7 @@ namespace plarail {
     const MARK_0 = 560           // 0 の mark
     const TOL = 400              // ±誤差許容
 
+/*
     control.inBackground(function () {
         pins.setPull(PIN_IR, PinPullMode.PullUp)
 
@@ -824,6 +825,53 @@ namespace plarail {
     function within(x: number, target: number): boolean {
         return x > target - TOL && x < target + TOL
     }
+
+*/
+
+
+
+
+
+	//===============================================
+	// IR受信デコード（バックグラウンド＋シリアル出力付き版）
+	//===============================================
+	control.inBackground(function () {
+	    pins.setPull(DigitalPin.P16, PinPullMode.PullUp)
+
+	    while (true) {
+	        let t = pins.pulseIn(DigitalPin.P16, PulseValue.Low, 20000)
+	        if (!within(t, LEADER_MARK)) continue
+
+	        t = pins.pulseIn(DigitalPin.P16, PulseValue.High, 10000)
+	        if (!within(t, LEADER_SPACE)) continue
+
+	        let bits = 0
+	        for (let i = 0; i < 12; i++) {
+	            let space = pins.pulseIn(DigitalPin.P16, PulseValue.Low, 3000)
+	            let mark  = pins.pulseIn(DigitalPin.P16, PulseValue.High, 3000)
+	            if (!within(space, 560)) { bits = -1; break }
+	            if (within(mark, MARK_1)) bits |= 1 << i
+	            else if (!within(mark, MARK_0)) { bits = -1; break }
+	        }
+	        if (bits < 0) continue
+
+	        let data = bits & 0x3F
+	        let inv  = (bits >> 6) & 0x3F
+	        if ((data ^ 0x3F) != inv) continue
+
+	        let sensorID = (data >> 2) & 0x0F
+	        let kind = data & 0x03
+
+	        // ★ここでシリアル出力★
+	        serial.writeLine("IR received! SensorID=" + sensorID + " Kind=" + kind)
+
+	        if (sensorID == 0 || sensorID > 16) continue
+	        if (kind > 2) continue
+
+	        let value = (sensorID << 4) | kind
+	        control.raiseEvent(EVT_IR, value)
+	    }
+	})
 
 
 
