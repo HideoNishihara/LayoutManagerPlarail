@@ -858,7 +858,8 @@ namespace plarail {
     		serial.writeLine("IR receive Leader Space(High) : " + t);
 	        
 	        // 受信したHighパルスが4.5ms(LEADER_SPACE)付近か確認（なければ次のループへ）
-	        if (!within(t, LEADER_SPACE)) continue
+	        //if (!within(t, LEADER_SPACE)) continue
+	        if (t < 4000) continue;
 
     		serial.writeLine("IR receive Leader done");
 
