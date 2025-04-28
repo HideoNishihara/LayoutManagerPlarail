@@ -845,7 +845,7 @@ namespace plarail {
 	        // 赤外線センサからの LOWパルス（Leader Mark）を待つ（最大20ms待機）
 	        let t = pins.pulseIn(DigitalPin.P16, PulseValue.Low, 20000);
 	        
-    		serial.writeLine("IR receive start : " + t);
+    		serial.writeLine("IR receive Leader Mark(Low) : " + t);
 	        
 	        
 	        // 受信したLowパルスの長さが9ms(LEADER_MARK)付近か確認（なければ次のループへ）
@@ -853,8 +853,14 @@ namespace plarail {
 			
 			// 続いて Highパルス（Leader Space）を受信（最大10ms待機）
 	        t = pins.pulseIn(DigitalPin.P16, PulseValue.High, 10000)
+	        
+    		serial.writeLine("IR receive Leader Space(High) : " + t);
+	        
 	        // 受信したHighパルスが4.5ms(LEADER_SPACE)付近か確認（なければ次のループへ）
 	        if (!within(t, LEADER_SPACE)) continue
+
+    		serial.writeLine("IR receive Leader done");
+
 
     		// ここまでで、リーダー部分（9ms + 4.5ms）が正しく受信できた！
     		serial.writeLine("IR LEADER received!");
