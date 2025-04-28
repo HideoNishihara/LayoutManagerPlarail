@@ -836,41 +836,77 @@ namespace plarail {
 	// IR受信デコード（バックグラウンド＋シリアル出力付き版）
 	//===============================================
 	control.inBackground(function () {
-	    pins.setPull(DigitalPin.P16, PinPullMode.PullUp)
+	    pins.setPull(DigitalPin.P16, PinPullMode.PullUp);
 
 	    while (true) {
-	        let t = pins.pulseIn(DigitalPin.P16, PulseValue.Low, 20000)
+	        // 赤外線センサからの LOWパルス（Leader Mark）を待つ（最大20ms待機）
+	        let t = pins.pulseIn(DigitalPin.P16, PulseValue.Low, 20000);
+	        // 受信したLowパルスの長さが9ms(LEADER_MARK)付近か確認（なければ次のループへ）
 	        if (!within(t, LEADER_MARK)) continue
-
+			
+			// 続いて Highパルス（Leader Space）を受信（最大10ms待機）
 	        t = pins.pulseIn(DigitalPin.P16, PulseValue.High, 10000)
+	        // 受信したHighパルスが4.5ms(LEADER_SPACE)付近か確認（なければ次のループへ）
 	        if (!within(t, LEADER_SPACE)) continue
 
-	        let bits = 0
-	        for (let i = 0; i < 12; i++) {
-	            let space = pins.pulseIn(DigitalPin.P16, PulseValue.Low, 3000)
-	            let mark  = pins.pulseIn(DigitalPin.P16, PulseValue.High, 3000)
-	            if (!within(space, 560)) { bits = -1; break }
-	            if (within(mark, MARK_1)) bits |= 1 << i
-	            else if (!within(mark, MARK_0)) { bits = -1; break }
+    		// ここまでで、リーダー部分（9ms + 4.5ms）が正しく受信できた！
+    		serial.writeLine("IR LEADER received!");
+
+	        // データビット受信開始：8ビット分
+	        let bits = 0;
+	        for (let i = 0; i < 8; i++) {
+				// 各ビット：まずLowパルス（bit間の区切り）を受信
+	            let space = pins.pulseIn(DigitalPin.P16, PulseValue.Low, 3000);
+	            // 次にHighパルス（bit情報そのもの）を受信
+	            let mark  = pins.pulseIn(DigitalPin.P16, PulseValue.High, 3000);
+	            
+	            // Lowパルスの長さが正しいかチェック（約560μs）
+	            if (!within(space, 560)) { bits = -1; break; }
+	            
+	            // Highパルスが長い（1690μs）なら「1」、短い（560μs）なら「0」
+	            if (within(mark, MARK_1))
+	            	bits |= 1 << i;
+	            else if (!within(mark, MARK_0)) {
+					bits = -1;
+					break;
+				}
 	        }
+	        // データ受信失敗なら最初からやり直し
 	        if (bits < 0) continue
 
-	        let data = bits & 0x3F
-	        let inv  = (bits >> 6) & 0x3F
-	        if ((data ^ 0x3F) != inv) continue
+	        // ★受信結果をシリアル出力（デバッグ用）
+	        serial.writeLine("IR received! Raw bits=" + bits)
 
-	        let sensorID = (data >> 2) & 0x0F
-	        let kind = data & 0x03
+	        // 受信した8ビットデータを解析
+	        let systemAddr = (bits >> 4) & 0x0F    // 上位4bit（システムアドレス）
+	        let cmdParity  = bits & 0x0F            // 下位4bit（コマンド+パリティ）
 
-	        // ★ここでシリアル出力★
-	        serial.writeLine("IR received! SensorID=" + sensorID + " Kind=" + kind)
+	        let cmd = (cmdParity >> 1) & 0x07       // コマンド（1〜3bit）
+	        let parity = cmdParity & 0x01           // パリティビット（最下位1bit）
 
-	        if (sensorID == 0 || sensorID > 16) continue
-	        if (kind > 2) continue
+	        // パリティチェック
+	        let calcParity = 0
+	        for (let i = 1; i < 8; i++) {
+	            if ((bits >> i) & 0x01) calcParity ^= 1
+	        }
+	        if (parity != calcParity) {
+	            serial.writeLine("Parity error!")
+	            continue
+	        }
 
-	        let value = (sensorID << 4) | kind
-	        control.raiseEvent(EVT_IR, value)
-	    }
+	        // コマンドから種別を判断
+	        let kind = cmd   // 0 = 離脱, 1 = 検出, 2 = 先頭車両
+
+	        // システムアドレスからセンサーIDに変換（1〜16）
+	        let sensorID = systemAddr + 1
+
+	        // ★最終的な受信結果をシリアル出力
+	        serial.writeLine("SensorID=" + sensorID + " Kind=" + kind)
+
+	        // センサーIDと種別でイベント発火
+	        //let value = (sensorID << 4) | kind
+	        //control.raiseEvent(4000, value)    // EVT_IR = 4000
+   	    }
 	})
 
 
