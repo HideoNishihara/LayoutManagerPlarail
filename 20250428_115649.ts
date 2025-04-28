@@ -338,7 +338,9 @@ namespace plarail {
 	    //% block="阪急"
 	    Hankyu,
 	    //% block="小田急"
-	    Odakyu
+	    Odakyu,
+	    //% block="鉄道唱歌"
+	    TetudouSyouka
 	}
 
 	//% block="発車メロディを再生 | %melody"
@@ -347,19 +349,34 @@ namespace plarail {
 	export function playDepartureMelodySelect(melody: DepartureMelody): void {
 	    switch (melody) {
 	        case DepartureMelody.JR:
-	            music.playMelody("E4 A4 D5 G4 E4 C5 B4 G4", 120)
-	            break
+	            music.setTempo(600);
+	            music.playMelody("C5 E5 G5 R4 E5 G5 C6 R4 G5 B5 E6", 600);
+	            break;
 	        case DepartureMelody.Keikyu:
-	            music.playMelody("G5 A5 B5 C6 B5 A5 G5 E5", 160)
-	            break
+	            music.setTempo(400);
+	            music.playMelody("C6 R2 E6 R2 G6 R2 C7 R4 G6 E6", 400);
+	            break;
 	        case DepartureMelody.Hankyu:
-	            music.playMelody("C5 E5 G5 C6 G5 E5 C5", 100)
-	            break
+	            music.setTempo(300);
+	            music.playMelody("C5 R2 D5 R2 G5 R2 C6 R2 G5 D5 C5", 300);
+	            break;
 	        case DepartureMelody.Odakyu:
-	            music.playMelody("C5 E5 G5 B5 A5 G5 E5 C5", 100)
-	            break
+	            music.setTempo(250);
+	            music.playMelody("E5 G5 B5 R4 D5 G5 B5 R4 G5 B5 E6", 250);
+	            break;
+	        case DepartureMelody.TetudouSyouka:
+			    // 発車チャイム（ピンポーン風）
+			    music.setTempo(300)
+			    music.playTone(Note.C5, music.beat(BeatFraction.Half))
+			    music.playTone(Note.G4, music.beat(BeatFraction.Whole))
+			    music.rest(music.beat(BeatFraction.Whole)) // 少し間をあける
+
+			    // 鉄道唱歌（汽笛一声 新橋を〜）
+			    music.setTempo(120)
+			    music.playMelody("G4:2 G4:2 A4:2 B4:2 C5:4 B4:2 A4:2 G4:4", 120);
+	            break;
 	    }
-	}
+   	}
 
 
 
