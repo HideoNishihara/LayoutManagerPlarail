@@ -366,8 +366,8 @@ namespace plarail {
 	            break;
 	        case DepartureMelody.TetudouSyouka:
 			    // 鉄道唱歌（汽笛一声 新橋を〜）
-				music.setTempo(100);
-				music.playMelody("G4:3 G4:1 G4:3 A5:1     B5:3 B5:1 B5:3 A5:1      G4:3 G4:1 G4:3 E4:1    D4:6 R:2    E4:3 E4:1 D4:3 E4:1  G4:3 G4:1 B5:3 B5:1   A5:3 A5:1 G4:3 A5:1  B4:6 R:2 ", 100);
+				music.setTempo(80);
+				music.playMelody("G4:3 R:1 G4:1 R:1 G4:3 R:1 A4:1 R:1     B4:3 R:1 B4:1 R:1 B4:3 R:1 A4:1 R:1      G4:3 R:1 G4:1 R:1 G4:3 R:1 E4:1 R:1    D4:6 R:2 R:1    E4:3 R:1 E4:1 R:1 D4:3 R:1 E4:1 R:1  G4:3 R:1 G4:1 R:1 B4:3 R:1 B4:1 R:1   A4:3 R:1 A4:1 R:1 G4:3 R:1 A4:1 R:1  B4:6R:1  R:2 ", 80);
 	            break;
 	    }
    	}
