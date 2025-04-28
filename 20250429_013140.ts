@@ -849,7 +849,8 @@ namespace plarail {
 	        
 	        
 	        // 受信したLowパルスの長さが9ms(LEADER_MARK)付近か確認（なければ次のループへ）
-	        if (!within(t, LEADER_MARK)) continue
+	   //     if (!within(t, LEADER_MARK)) continue;
+	        if (t < 4000) continue;
 			
 			// 続いて Highパルス（Leader Space）を受信（最大10ms待機）
 	        t = pins.pulseIn(DigitalPin.P16, PulseValue.High, 10000)
