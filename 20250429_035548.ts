@@ -768,6 +768,7 @@ namespace plarail {
     //	IR 受信デコード (バックグラウンド)
 	//=================================================
 	//	受信用ハード定数
+/*
     const PIN_IR = DigitalPin.P16
     const LEADER_MARK = 9000     // µs 9 ms
     const LEADER_SPACE = 4500    // 4.5 ms
@@ -775,7 +776,6 @@ namespace plarail {
     const MARK_0 = 560           // 0 の mark
     const TOL = 400              // ±誤差許容
 
-/*
     control.inBackground(function () {
         pins.setPull(PIN_IR, PinPullMode.PullUp)
 
@@ -818,14 +818,21 @@ namespace plarail {
         }
     })
 */
+const PIN_IR = DigitalPin.P16
+const LEADER_MARK_MIN = 4000  // Leader Mark認識下限（μs）
+const LEADER_SPACE_MIN = 4000 // Leader Space認識下限（μs）
+const BIT_SPACE = 560         // ビット間のLow長（μs）
+const BIT_MARK_0 = 560        // "0"のHigh長（μs）
+const BIT_MARK_1 = 1690       // "1"のHigh長（μs）
+const TOL = 400               // 許容誤差 (μs)
+
 
 	//-------------------------------------------------
-    //	ユーティリティ
-    //		受信タイミングの揺れを吸収 し、理論値ピッタリでなくてもデコードできるようにしている
+	// within関数（誤差を許容して比較する）
 	//-------------------------------------------------
-    function within(x: number, target: number): boolean {
-        return x > target - TOL && x < target + TOL
-    }
+	function within(x: number, target: number): boolean {
+	    return x > target - TOL && x < target + TOL
+	}
 
 
 
