@@ -850,7 +850,7 @@ namespace plarail {
 	        
 	        // 受信したLowパルスの長さが9ms(LEADER_MARK)付近か確認（なければ次のループへ）
 	   //     if (!within(t, LEADER_MARK)) continue;
-	        if (t < 4000) continue;
+	        if (t < 8000) continue;
 			
 			// 続いて Highパルス（Leader Space）を受信（最大10ms待機）
 	        t = pins.pulseIn(DigitalPin.P16, PulseValue.High, 10000)
@@ -872,8 +872,13 @@ namespace plarail {
 	        for (let i = 0; i < 8; i++) {
 				// 各ビット：まずLowパルス（bit間の区切り）を受信
 	            let space = pins.pulseIn(DigitalPin.P16, PulseValue.Low, 3000);
+	            
 	            // 次にHighパルス（bit情報そのもの）を受信
 	            let mark  = pins.pulseIn(DigitalPin.P16, PulseValue.High, 3000);
+
+    		serial.writeLine(i + " : space = " + space + " / mark = " + mark);
+
+
 	            
 	            // Lowパルスの長さが正しいかチェック（約560μs）
 	            if (!within(space, 560)) { bits = -1; break; }
