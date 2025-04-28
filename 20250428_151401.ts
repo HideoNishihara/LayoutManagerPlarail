@@ -331,6 +331,8 @@ namespace plarail {
 	//	発車メロディ・ベルの再生
 	//===============================================
 	export enum DepartureMelody {
+	    //% block="鉄道唱歌（品川駅）"
+	    TetudouSyouka,
 	    //% block="JR東日本"
 	    JR,
 	    //% block="京急"
@@ -338,9 +340,7 @@ namespace plarail {
 	    //% block="阪急"
 	    Hankyu,
 	    //% block="小田急"
-	    Odakyu,
-	    //% block="鉄道唱歌"
-	    TetudouSyouka
+	    Odakyu
 	}
 
 	//% block="発車メロディを再生 | %melody"
@@ -348,6 +348,11 @@ namespace plarail {
 	//% weight=500
 	export function playDepartureMelodySelect(melody: DepartureMelody): void {
 	    switch (melody) {
+	        case DepartureMelody.TetudouSyouka:
+			    // 鉄道唱歌（汽笛一声 新橋を〜）
+				music.setTempo(200);
+				music.playMelody("G4:3 R:1 G4:1 R:1 G4:3 R:1 A4:1 R:1 B4:3 R:1 B4:1 R:1 B4:3 R:1 A4:1 R:1 G4:3 R:1 G4:1 R:1 G4:3 R:1 E4:1 R:1 D4:6 R:2 E4:3 R:1 E4:1 R:1 D4:3 R:1 E4:1 R:1 G4:3 R:1 G4:1 R:1 B4:3 R:1 B4:1 R:1 A4:3 R:1 A4:1 R:1 G4:3 R:1 A4:1 R:1 B4:6 R:2 D5:3 R:1 D5:1 R:1 D5:3 R:1 D5:1 R:1 D5:3 R:1 D5:1 R:1 E5:3 R:1 D5:1 R:1 B4:3 G4:1 R:1 A4:3 R:1 B4:1 R:1 A4:6 R:2 G4:3 R:1 A4:1 R:1 B4:3 R:1 B4:1 R:1 A4:3 R:1 A4:1 R:1 D5:3 R:1 D5:1 R:1 B4:3 R:1 B4:1 R:1 A4:3 R:1 A4:1 R:1 G4:6 R:2", 200);
+	            break;
 	        case DepartureMelody.JR:
 	            music.setTempo(600);
 	            music.playMelody("C5 E5 G5 R4 E5 G5 C6 R4 G5 B5 E6", 600);
@@ -363,11 +368,6 @@ namespace plarail {
 	        case DepartureMelody.Odakyu:
 	            music.setTempo(250);
 	            music.playMelody("E5 G5 B5 R4 D5 G5 B5 R4 G5 B5 E6", 250);
-	            break;
-	        case DepartureMelody.TetudouSyouka:
-			    // 鉄道唱歌（汽笛一声 新橋を〜）
-				music.setTempo(140);
-				music.playMelody("G4:3 R:1 G4:1 R:1 G4:3 R:1 A4:1 R:1 B4:3 R:1 B4:1 R:1 B4:3 R:1 A4:1 R:1 G4:3 R:1 G4:1 R:1 G4:3 R:1 E4:1 R:1 D4:6 R:2 R:1 E4:3 R:1 E4:1 R:1 D4:3 R:1 E4:1 R:1 G4:3 R:1 G4:1 R:1 B4:3 R:1 B4:1 R:1 A4:3 R:1 A4:1 R:1 G4:3 R:1 A4:1 R:1 B4:6 R:1 R:2", 140);
 	            break;
 	    }
    	}
