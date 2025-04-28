@@ -333,13 +333,13 @@ namespace plarail {
 	export enum DepartureMelody {
 	    //% block="鉄道唱歌（品川駅）"
 	    TetudouSyouka,
-	    //% block="JR東日本"
+	    //% block="チャイム風（JR東日本系）"
 	    JR,
-	    //% block="京急"
+	    //% block="ピポパ風（京急）"
 	    Keikyu,
-	    //% block="阪急"
+	    //% block="和風アルペジオ（阪急）"
 	    Hankyu,
-	    //% block="小田急"
+	    //% block="しっとりメロディ（小田急）"
 	    Odakyu
 	}
 
@@ -352,10 +352,13 @@ namespace plarail {
 	        case DepartureMelody.TetudouSyouka:
 			    // 鉄道唱歌（汽笛一声 新橋を〜）
 				music.setTempo(200);
-				music.playMelody("G4:3 R:1 G4:1 R:1 G4:3 R:1 A4:1 R:1 B4:3 R:1 B4:1 R:1 B4:3 R:1 A4:1 R:1 G4:3 R:1 G4:1 R:1 G4:3 R:1 E4:1 R:1 D4:6 R:3", 200);
-				music.playMelody("E4:3 R:1 E4:1 R:1 D4:3 R:1 E4:1 R:1 G4:3 R:1 G4:1 R:1 B4:3 R:1 B4:1 R:1 A4:3 R:1 A4:1 R:1 G4:3 R:1 A4:1 R:1 B4:6 R:3", 200);
-				music.playMelody("D5:3 R:1 D5:1 R:1 D5:3 R:1 D5:1 R:1 D5:3 R:1 D5:1 R:1 E5:3 R:1 D5:1 R:1 B4:3 R:1 G4:1 R:1 A4:3 R:1 B4:1 R:1 A4:6 R:3", 200);
-				music.playMelody("G4:3 R:1 A4:1 R:1 B4:3 R:1 B4:1 R:1 A4:3 R:1 A4:1 R:1 D5:3 R:1 D5:1 R:1 B4:3 R:1 B4:1 R:1 A4:3 R:1 A4:1 R:1 G4:6", 200);
+				music.playMelody(
+					"G4:3 R:1 G4:1 R:1 G4:3 R:1 A4:1 R:1 B4:3 R:1 B4:1 R:1 B4:3 R:1 A4:1 R:1 G4:3 R:1 G4:1 R:1 G4:3 R:1 E4:1 R:1 D4:6 R:3 " +
+					"E4:3 R:1 E4:1 R:1 D4:3 R:1 E4:1 R:1 G4:3 R:1 G4:1 R:1 B4:3 R:1 B4:1 R:1 A4:3 R:1 A4:1 R:1 G4:3 R:1 A4:1 R:1 B4:6 R:3 " +
+					"D5:3 R:1 D5:1 R:1 D5:3 R:1 D5:1 R:1 D5:3 R:1 D5:1 R:1 E5:3 R:1 D5:1 R:1 B4:3 R:1 G4:1 R:1 A4:3 R:1 B4:1 R:1 A4:6 R:3 " +
+					"G4:3 R:1 A4:1 R:1 B4:3 R:1 B4:1 R:1 A4:3 R:1 A4:1 R:1 D5:3 R:1 D5:1 R:1 B4:3 R:1 B4:1 R:1 A4:3 R:1 A4:1 R:1 G4:6",
+					200
+				);
 				let volumeSteps = [255, 200, 150, 120, 90, 70, 50, 35, 20, 10, 5, 0]
 				for (let vol of volumeSteps) {
 				    music.setVolume(vol)
@@ -364,20 +367,40 @@ namespace plarail {
 				music.stopAllSounds()
 	            break;
 	        case DepartureMelody.JR:
-	            music.setTempo(600);
-	            music.playMelody("C5 E5 G5 R4 E5 G5 C6 R4 G5 B5 E6", 600);
-	            break;
+				music.setTempo(500)
+				music.playMelody(
+				    "C5 E5 G5 R4 E5 G5 C6 R4 G5 B5 E6 R4 " +
+				    "C5 E5 G5 R4 E5 G5 C6 R4 G5 B5 E6 R4 " +
+				    "E5 G5 C6 R4 G5 B5 E6 R4 C6 D6 E6",
+				    500
+				);
+				break;
 	        case DepartureMelody.Keikyu:
-	            music.setTempo(400);
-	            music.playMelody("C6 R2 E6 R2 G6 R2 C7 R4 G6 E6", 400);
+				music.setTempo(400)
+				music.playMelody(
+				    "C6 R2 E6 R2 G6 R2 C7 R4 G6 E6 R2 " +
+				    "C6 R2 E6 R2 G6 R2 C7 R4 G6 E6 R2 " +
+				    "C7 R2 D7 R2 C7 R2 G6 R2"
+				    , 400
+				);
 	            break;
 	        case DepartureMelody.Hankyu:
-	            music.setTempo(300);
-	            music.playMelody("C5 R2 D5 R2 G5 R2 C6 R2 G5 D5 C5", 300);
+				music.setTempo(300)
+				music.playMelody(
+				    "C5 R2 D5 R2 G5 R2 C6 R2 G5 D5 C5 R2 " +
+				    "C5 R2 D5 R2 G5 R2 C6 R2 G5 D5 C5 R2 " +
+				    "D5 R2 G5 R2 A5 R2 D6 R2"
+				    , 300
+				)
 	            break;
 	        case DepartureMelody.Odakyu:
-	            music.setTempo(250);
-	            music.playMelody("E5 G5 B5 R4 D5 G5 B5 R4 G5 B5 E6", 250);
+				music.setTempo(250)
+				music.playMelody(
+				    "E5 G5 B5 R4 D5 G5 B5 R4 G5 B5 E6 R4 " +
+				    "E5 G5 B5 R4 D5 G5 B5 R4 G5 B5 E6 R4 " +
+				    "E5 G5 B5 R4 C5 E5 G5 R4 B4 D5 G5",
+				    250
+				)
 	            break;
 	    }
    	}
