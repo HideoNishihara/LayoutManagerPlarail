@@ -347,11 +347,21 @@ namespace plarail {
 	//% inlineInputMode=inline
 	//% weight=500
 	export function playDepartureMelodySelect(melody: DepartureMelody): void {
+		music.setVolume(255);
 	    switch (melody) {
 	        case DepartureMelody.TetudouSyouka:
 			    // 鉄道唱歌（汽笛一声 新橋を〜）
 				music.setTempo(200);
-				music.playMelody("G4:3 R:1 G4:1 R:1 G4:3 R:1 A4:1 R:1 B4:3 R:1 B4:1 R:1 B4:3 R:1 A4:1 R:1 G4:3 R:1 G4:1 R:1 G4:3 R:1 E4:1 R:1 D4:6 R:2 E4:3 R:1 E4:1 R:1 D4:3 R:1 E4:1 R:1 G4:3 R:1 G4:1 R:1 B4:3 R:1 B4:1 R:1 A4:3 R:1 A4:1 R:1 G4:3 R:1 A4:1 R:1 B4:6 R:2 D5:3 R:1 D5:1 R:1 D5:3 R:1 D5:1 R:1 D5:3 R:1 D5:1 R:1 E5:3 R:1 D5:1 R:1 B4:3 G4:1 R:1 A4:3 R:1 B4:1 R:1 A4:6 R:2 G4:3 R:1 A4:1 R:1 B4:3 R:1 B4:1 R:1 A4:3 R:1 A4:1 R:1 D5:3 R:1 D5:1 R:1 B4:3 R:1 B4:1 R:1 A4:3 R:1 A4:1 R:1 G4:6 R:2", 200);
+				music.playMelody("G4:3 R:1 G4:1 R:1 G4:3 R:1 A4:1 R:1 B4:3 R:1 B4:1 R:1 B4:3 R:1 A4:1 R:1 G4:3 R:1 G4:1 R:1 G4:3 R:1 E4:1 R:1 D4:6 R:2", 200);
+				music.playMelody("E4:3 R:1 E4:1 R:1 D4:3 R:1 E4:1 R:1 G4:3 R:1 G4:1 R:1 B4:3 R:1 B4:1 R:1 A4:3 R:1 A4:1 R:1 G4:3 R:1 A4:1 R:1 B4:6 R:2", 200);
+				music.playMelody("D5:3 R:1 D5:1 R:1 D5:3 R:1 D5:1 R:1 D5:3 R:1 D5:1 R:1 E5:3 R:1 D5:1 R:1 B4:3 R:1 G4:1 R:1 A4:3 R:1 B4:1 R:1 A4:6 R:2", 200);
+				music.playMelody("G4:3 R:1 A4:1 R:1 B4:3 R:1 B4:1 R:1 A4:3 R:1 A4:1 R:1 D5:3 R:1 D5:1 R:1 B4:3 R:1 B4:1 R:1 A4:3 R:1 A4:1 R:1 G4:6", 200);
+				let volumeSteps = [255, 200, 150, 120, 90, 70, 50, 35, 20, 10, 5, 0]
+				for (let vol of volumeSteps) {
+				    music.setVolume(vol)
+				    music.playTone(Note.G4, music.beat(BeatFraction.Sixteenth))
+				}
+				music.stopAllSounds()
 	            break;
 	        case DepartureMelody.JR:
 	            music.setTempo(600);
