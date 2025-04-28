@@ -119,7 +119,7 @@ namespace plarail {
     const EVT_IR = 4000      // channel
     /** value = (sensorID<<4) | kind  とする (上位4bit:ID / 下位4bit:種別) */
 
-    //% block=" %sensor で 先頭車両 を検出したとき"
+    //% block="%sensor で 先頭車両 を検出したとき"
     //% blockId=plarail_onHead
     //% weight=790
     export function onHead(sensor: SensorID, handler: () => void) {
@@ -129,7 +129,7 @@ namespace plarail {
 	//===============================================
     //	センサー %sensor で 列車 を検出したとき（照度センサー：コマンド=1）
 	//===============================================
-    //% block=" %sensor で 列車 を検出したとき"
+    //% block="%sensor で 列車 を検出したとき"
     //% blockId=plarail_onDetect
     //% weight=780
     export function onDetect(sensor: SensorID, handler: () => void) {
@@ -139,7 +139,7 @@ namespace plarail {
 	//===============================================
     //	センサー %sensor で 列車離脱 を検出したとき（照度センサー：コマンド=0）
 	//===============================================
-    //% block=" %sensor で 列車離脱 を検出したとき"
+    //% block="%sensor で 列車離脱 を検出したとき"
     //% blockId=plarail_onLeave
     //% weight=770
     export function onLeave(sensor: SensorID, handler: () => void) {
@@ -149,7 +149,6 @@ namespace plarail {
 	//===============================================
 	//	列車（Ａ or Ｂ）を、速度（１～６）で前進
 	//===============================================
-	//% block="列車ID"
 	export enum TrainID {
 	    //% block="列車 Ａ"
 	    A = 1,
@@ -172,7 +171,7 @@ namespace plarail {
 		S6 = 6
 	}
     
-	//% block=" %id を %speed で前進"
+	//% block="%id を %speed で前進"
 	//% inlineInputMode=inline
     //% weight=690
 	export function driveForward(id: TrainID, speed: Speed): void {
@@ -217,7 +216,7 @@ namespace plarail {
 		B3 = 3
 	}
 
-	//% block=" %id を %speedBack で後進"
+	//% block="%id を %speedBack で後進"
 	//% inlineInputMode=inline
     //% weight=680
 	export function driveBack(id: TrainID, speedBack: SpeedBack): void {
@@ -239,7 +238,7 @@ namespace plarail {
 	//===============================================
 	//	列車（Ａ or Ｂ）を、停止
 	//===============================================
-	//% block=" %id を 停止"
+	//% block="%id を 停止"
 	//% inlineInputMode=inline
     //% weight=670
 	export function driveStop(id: TrainID): void {
@@ -271,7 +270,7 @@ namespace plarail {
 	//===============================================
 	//	列車（Ａ or Ｂ）を、前進加速
 	//===============================================
-	//% block=" %id を 前進加速（１段階）"
+	//% block="%id を 前進加速（１段階）"
 	//% inlineInputMode=inline
     //% weight=660
 	export function driveForwardUp(id: TrainID): void {
@@ -291,7 +290,7 @@ namespace plarail {
 	//===============================================
 	//	列車（Ａ or Ｂ）を、前進減速
 	//===============================================
-	//% block=" %id を 前進減速（１段階）"
+	//% block="%id を 前進減速（１段階）"
 	//% inlineInputMode=inline
     //% weight=650
 	export function driveForwardDown(id: TrainID): void {
@@ -311,7 +310,7 @@ namespace plarail {
 	//===============================================
 	//	列車（Ａ or Ｂ）を、最高速度（６）まで加速
 	//===============================================
-	//% block=" %id を 前進加速（最高速度まで）"
+	//% block="%id を 前進加速（最高速度まで）"
 	//% inlineInputMode=inline
     //% weight=640
 	export function driveForwardUpToMax(id: TrainID): void {
