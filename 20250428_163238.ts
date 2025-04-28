@@ -377,36 +377,64 @@ namespace plarail {
 				music.playMelody(
 				    "C5 E5 G5 R4 E5 G5 C6 R4 G5 B5 E6 R4 " +
 				    "C5 E5 G5 R4 E5 G5 C6 R4 G5 B5 E6 R4 " +
-				    "E5 G5 C6 R4 G5 B5 E6 R4 C6 D6 E6",
-				    500
-				);
+				    "E5 G5 C6 R4 G5 B5 E6 R4 C6 D6", 500
+				)
+
+				// 最後のE6をフェードアウトで伸ばす
+				music.setVolume(255)
+				for (let vol = 255; vol >= 0; vol -= 20) {
+				    music.setVolume(vol)
+				    music.playTone(Note.E6, music.beat(BeatFraction.Sixteenth))
+				}
+				music.stopAllSounds()
 				break;
 	        case DepartureMelody.Keikyu:
 				music.setTempo(400)
 				music.playMelody(
 				    "C6 R2 E6 R2 G6 R2 C7 R4 G6 E6 R2 " +
 				    "C6 R2 E6 R2 G6 R2 C7 R4 G6 E6 R2 " +
-				    "C7 R2 D7 R2 C7 R2 G6 R2"
-				    , 400
-				);
+				    "C7 R2 D7", 400
+				)
+
+				// 最後のD7をフェードアウト
+				music.setVolume(255)
+				for (let vol = 255; vol >= 0; vol -= 20) {
+				    music.setVolume(vol)
+				    music.playTone(Note.D7, music.beat(BeatFraction.Sixteenth))
+				}
+				music.stopAllSounds()
 	            break;
 	        case DepartureMelody.Hankyu:
 				music.setTempo(300)
 				music.playMelody(
 				    "C5 R2 D5 R2 G5 R2 C6 R2 G5 D5 C5 R2 " +
 				    "C5 R2 D5 R2 G5 R2 C6 R2 G5 D5 C5 R2 " +
-				    "D5 R2 G5 R2 A5 R2 D6 R2"
-				    , 300
+				    "D5 R2 G5 R2 A5", 300
 				)
+
+				// 最後のA5をフェードアウト
+				music.setVolume(255)
+				for (let vol = 255; vol >= 0; vol -= 20) {
+				    music.setVolume(vol)
+				    music.playTone(Note.A5, music.beat(BeatFraction.Sixteenth))
+				}
+				music.stopAllSounds()
 	            break;
 	        case DepartureMelody.Odakyu:
 				music.setTempo(250)
 				music.playMelody(
 				    "E5 G5 B5 R4 D5 G5 B5 R4 G5 B5 E6 R4 " +
 				    "E5 G5 B5 R4 D5 G5 B5 R4 G5 B5 E6 R4 " +
-				    "E5 G5 B5 R4 C5 E5 G5 R4 B4 D5 G5",
-				    250
+				    "E5 G5 B5 R4 C5", 250
 				)
+
+				// 最後のC5をフェードアウト
+				music.setVolume(255)
+				for (let vol = 255; vol >= 0; vol -= 20) {
+				    music.setVolume(vol)
+				    music.playTone(Note.C5, music.beat(BeatFraction.Sixteenth))
+				}
+				music.stopAllSounds()
 	            break;
 	    }
    	}
