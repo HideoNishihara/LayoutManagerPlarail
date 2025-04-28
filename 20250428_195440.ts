@@ -780,15 +780,15 @@ namespace plarail {
         pins.setPull(PIN_IR, PinPullMode.PullUp)
 
         while (true) {
-            /* 4-1. Leader の Hi (mark) を待つ */
+            // 4-1. Leader の Hi (mark) を待つ
             let t = pins.pulseIn(PIN_IR, PulseValue.Low, 20000)   // Low 時間 9 ms
             if (!within(t, LEADER_MARK)) continue
 
-            /* 4-2. Leader の Low (space) */
+            // 4-2. Leader の Low (space)
             t = pins.pulseIn(PIN_IR, PulseValue.High, 10000)      // Hi 時間 4.5 ms
             if (!within(t, LEADER_SPACE)) continue
 
-            /* 4-3. 12bit 受信 : Hi (space) – Low (mark) */
+            // 4-3. 12bit 受信 : Hi (space) – Low (mark)
             let bits = 0
             for (let i = 0; i < 12; i++) {
                 let space = pins.pulseIn(PIN_IR, PulseValue.Low, 3000)   // 560 µs
@@ -800,19 +800,19 @@ namespace plarail {
             }
             if (bits < 0) continue          // 受信失敗
 
-            /* 4-4. 上位6bit と 下位6bit(反転) の整合性確認 */
+            // 4-4. 上位6bit と 下位6bit(反転) の整合性確認
             let data = bits & 0x3F          // 0-5bit
             let inv  = (bits >> 6) & 0x3F   // 6-11bit
             if ((data ^ 0x3F) != inv) continue  // 反転一致しない
 
-            /* 4-5. データを分解 → センサー ID / 種別 */
+            // 4-5. データを分解 → センサー ID / 種別
             let sensorID = (data >> 2) & 0x0F       // bit0-3
             let kind     =  data & 0x03             // bit4-5
 
             if (sensorID == 0 || sensorID > 16) continue   // 1-16 範囲外は無視
             if (kind > 2) continue                         // 00/01/02 以外無視
 
-            /* 4-6. イベント送出 */
+            // 4-6. イベント送出
             let value = (sensorID << 4) | kind      // 0xXY (X=ID, Y=kind)
             control.raiseEvent(EVT_IR, value)
         }
