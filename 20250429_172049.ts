@@ -926,7 +926,7 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 					loopFlag = true;
 					break;
 				} else {
-			        serial.writeLine("Leader Space detected! : " + highDuration + "us");
+//			        serial.writeLine("Leader Space detected! : " + highDuration + "us");
 					loopFlag = false;
 					break;
 				}
@@ -979,36 +979,45 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 	            
 	            while (true) {
 		            while (pins.digitalReadPin(PIN_IR) == 1);
+		            
 		            let t7 = control.micros();
 
 		            let markDuration = t7 - t6;
 		        
 		            // mark長のチェック
-		            if (spaceDuration < BIT_SPACE_MIN) {
+		            if (markDuration < BIT_MARK_0_MIN) {
 		                continue;
-		            } else if (spaceDuration > BIT_SPACE_MAX) {
-						spaceTime[i] = spaceDuration;
+		            } else if (markDuration < BIT_MARK_0_MAX) {
+						markTime[i] = markDuration;
+						break;
+		            } else if (markDuration < BIT_MARK_1_MIN) {
+		                continue;
+		            } else if (markDuration > BIT_SPACE_MAX) {
+						spaceTime[i] = markDuration;
 						bits = -1;
 						break;
 					} else {
-						spaceTime[i] = spaceDuration;
+						markTime[i] = markDuration;
 						break;
 					}
 		        }
-		        
+	            if (bits < 0) break;
 
-	            if (within(markDuration, BIT_MARK_1)) {
+	            
+	            //受信データを、bitsにセット
+	            if (markDuration > 1000) {
 	                bits |= 1 << i;  // "1"ならビット立てる
-	            } else if (!within(markDuration, BIT_MARK_0)) {
-	                serial.writeLine("Bit Mark error : " + markDuration + "us");
-	                bits = -1;
-	                break;
 	            }
 	        }
 
 	        if (bits < 0) continue; // データビット受信失敗ならループの最初に戻る
 
+
+			//---------------------------------------------------
 	        // ★ 4. 受信データ解析
+			//---------------------------------------------------
+	        serial.writeLine("Leader Mark =" + lowDuration + "us");
+	        serial.writeLine("Leader Space =" + highDuration + "us");
 	        serial.writeLine("IR received! Raw bits=" + bits);
 
 	        let systemAddr = (bits >> 4) & 0x0F    // 上位4bit（システムアドレス）
