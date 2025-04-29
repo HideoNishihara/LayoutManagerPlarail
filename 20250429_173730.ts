@@ -895,7 +895,10 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 					break;
 				}
 		    }
-		    if (loopFlag == true) continue;
+		    if (loopFlag == true) {
+		        serial.writeLine("Leader Mark =" + lowDuration + "us (error)");
+				continue;
+			}
 
 			//--------------------------------------------------- https://github.com/HideoNishihara/LayoutManagerPlarail
 	        // ★ 2. Leader Space検出
@@ -931,7 +934,11 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 					break;
 				}
 			}
-		    if (loopFlag == true) continue;
+		    if (loopFlag == true) {
+		        serial.writeLine("Leader Mark =" + lowDuration + "us");
+		        serial.writeLine("Leader Space =" + highDuration + "us (error)");
+				continue;
+			}
 
 			//---------------------------------------------------
 	        // ★ 3. データビット受信（8ビット）
@@ -1012,7 +1019,12 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 	            }
 	        }
 
-	        if (bits < 0) continue; // データビット受信失敗ならループの最初に戻る
+	        if (bits < 0) {
+		        serial.writeLine("Leader Mark =" + lowDuration + "us");
+		        serial.writeLine("Leader Space =" + highDuration + "us");
+		        serial.writeLine("IR received! Raw bits=" + bits + " (error)");
+				continue; // データビット受信失敗ならループの最初に戻る
+			}
 
 
 			//---------------------------------------------------
