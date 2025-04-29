@@ -822,11 +822,11 @@ namespace plarail {
 
 const PIN_IR = DigitalPin.P16
 
-const BIT_SPACE_MIN = 360         // ビット間 Low時間（μs）560
-const BIT_SPACE_MAX = 710         // ビット間 Low時間（μs）
+const BIT_SPACE_MIN = 640         // ビット間 Low時間（μs）840   560
+const BIT_SPACE_MAX = 990         // ビット間 Low時間（μs）
 
-const BIT_MARK_0_MIN = 360        // "0"のHigh時間（μs）560
-const BIT_MARK_0_MAX = 710        // "0"のHigh時間（μs）
+const BIT_MARK_0_MIN = 640        // "0"のHigh時間（μs）840     560
+const BIT_MARK_0_MAX = 990        // "0"のHigh時間（μs）
 
 const BIT_MARK_1_MIN = 1400       // "1"のHigh時間（μs）1690
 const BIT_MARK_1_MAX = 1840       // "1"のHigh時間（μs）
