@@ -822,31 +822,19 @@ namespace plarail {
 
 const PIN_IR = DigitalPin.P16
 
-const BIT_SPACE_MIN = 460         // ビット間 Low時間（μs）
-const BIT_SPACE_MAX = 660         // ビット間 Low時間（μs）
+const BIT_SPACE_MIN = 410         // ビット間 Low時間（μs）560
+const BIT_SPACE_MAX = 710         // ビット間 Low時間（μs）
 
-const BIT_MARK_0_MIN = 460        // "0"のHigh時間（μs）
-const BIT_MARK_0_MAX = 660        // "0"のHigh時間（μs）
+const BIT_MARK_0_MIN = 410        // "0"のHigh時間（μs）560
+const BIT_MARK_0_MAX = 710        // "0"のHigh時間（μs）
 
-const BIT_MARK_1_MIN = 1590       // "1"のHigh時間（μs）
-const BIT_MARK_1_MAX = 1790       // "1"のHigh時間（μs）
-
-const TOL = 400               // 許容誤差 (μs)
-const LEADER_MIN = 2000       // LeaderパルスとみなすLow時間（ざっくり2ms以上）
+const BIT_MARK_1_MIN = 1540       // "1"のHigh時間（μs）1690
+const BIT_MARK_1_MAX = 1840       // "1"のHigh時間（μs）
 
 const LEADER_MARK_MIN = 8500       // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
 const LEADER_MARK_MAX = 9500       // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
 const LEADER_SPACE_MIN = 4000       // Leader Space パルスとみなすLow時間（ざっくり2ms以上）
 const LEADER_SPACE_MAX = 5000       // Leader Space パルスとみなすLow時間（ざっくり2ms以上）
-const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
-
-
-	//-------------------------------------------------
-	// within関数（誤差を許容して比較する）
-	//-------------------------------------------------
-	function within(x: number, target: number): boolean {
-	    return x > target - TOL && x < target + TOL
-	}
 
 
 	//===============================================
@@ -942,7 +930,6 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 	        
 	        let bits = 0;
 	        let t5;
-	        let spaceDuration
 	        
 	        let ii;
 	        
@@ -954,6 +941,7 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 	            
 	            // Lowパルス（space）を受信
 	            let t4 = t3;  //control.micros();
+	        	let spaceDuration
 	            
 	            while (true) {
 		            while (pins.digitalReadPin(PIN_IR) == 0);
@@ -988,6 +976,7 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 		            while (pins.digitalReadPin(PIN_IR) == 1);
 		            
 		            let t7 = control.micros();
+		            t3 = t7;
 
 		            markDuration = t7 - t6;
 		        
