@@ -879,18 +879,14 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 		        t1 = control.micros();
 
 		        lowDuration = t1 - t0;
-//		        serial.writeLine("Low time = " + lowDuration + "us");
 
 		        // ★ リーダー判定（LEADER_MARK_MIN以下）
 		        if (lowDuration < LEADER_MARK_MIN) {
-//		            serial.writeLine("not Leader : lowDuration < LEADER_MARK_MIN");
 		            continue;
 		        } else if (lowDuration > LEADER_MARK_MAX) {
-//		            serial.writeLine("not Leader : lowDuration > LEADER_MARK_MAX");
 					loopFlag = true;
 					break;
 				} else {
-//			        serial.writeLine("Leader Mark detected! : " + lowDuration + "us");
 					loopFlag = false;
 					break;
 				}
@@ -918,18 +914,14 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 		        t3 = control.micros();
 
 		        highDuration = t3 - t2;
-//		        serial.writeLine("Leader Space High time = " + highDuration + "us");
 
 		        // ★ スペース判定（LEADER_SPACE_MIN以下）
 		        if (highDuration < LEADER_SPACE_MIN) {
-//		            serial.writeLine("not Leader : highDuration < LEADER_SPACE_MIN");
 		            continue;
 		        } else if (highDuration > LEADER_SPACE_MAX) {
-//		            serial.writeLine("not Leader : highDuration > LEADER_SPACE_MAX");
 					loopFlag = true;
 					break;
 				} else {
-//			        serial.writeLine("Leader Space detected! : " + highDuration + "us");
 					loopFlag = false;
 					break;
 				}
@@ -1001,7 +993,7 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 						break;
 		            } else if (markDuration < BIT_MARK_1_MIN) {
 		                continue;
-		            } else if (markDuration > BIT_SPACE_MAX) {
+		            } else if (markDuration > BIT_MARK_1_MAX) {
 						spaceTime[i] = markDuration;
 						bits = -1;
 						break;
