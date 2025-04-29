@@ -1042,7 +1042,7 @@ const LEADER_SPACE_MAX = 5000       // Leader Space パルスとみなすLow時�
 	        }
 
 	        // コマンドから種別
-	        let kind = cmd   // 0 = 離脱, 1 = 検出, 2 = 先頭車両
+	        let kind = ((cmd & 0x07) >> 1);   // 0 = 離脱, 1 = 検出, 2 = 先頭車両
 
 	        // システムアドレスからセンサーID変換（1〜16）
 	        let sensorID = systemAddr + 1
