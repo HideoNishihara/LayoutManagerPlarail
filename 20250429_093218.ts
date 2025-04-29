@@ -819,8 +819,8 @@ namespace plarail {
     })
 */
 const PIN_IR = DigitalPin.P16
-const LEADER_MARK_MIN = 8000  // Leader Mark認識下限（μs）
-const LEADER_SPACE_MIN = 4000 // Leader Space認識下限（μs）
+const LEADER_MARK_MIN = 6000  // Leader Mark認識下限（μs）
+const LEADER_SPACE_MIN = 3000 // Leader Space認識下限（μs）
 const BIT_SPACE = 560         // ビット間のLow長（μs）
 const BIT_MARK_0 = 560        // "0"のHigh長（μs）
 const BIT_MARK_1 = 1690       // "1"のHigh長（μs）
