@@ -1013,7 +1013,7 @@ const LEADER_SPACE_MAX = 5000       // Leader Space パルスとみなすLow時�
             //受信データを、bitsにセット
             bits = 0;
 	        for (let i = 7; i >= 0; i--) {
-	            if (markTime[i] > 1000) {
+	            if (markTime[7-i] > 1000) {
 	                bits |= (1 << i);  // "1"ならビット立てる
 	            }
 	        }
