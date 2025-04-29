@@ -837,6 +837,8 @@ const TOL = 400               // 許容誤差 (μs)
 
 
 
+   		serial.writeLine("IR receive...004 : t1=" + t1);
+      serial.writeLine("Leader Mark Low time = " + lowDuration + "us");
 
 
 	//===============================================
@@ -849,51 +851,52 @@ const TOL = 400               // 許容誤差 (μs)
 
 	    while (true) {
 
-	        // ★ 1. Leader Mark (Low)を検出
-   		serial.writeLine("IR receive...001");
+	        // ★ 1. リーダーMark検出（Lowパルス）
 	        while (pins.digitalReadPin(PIN_IR) == 1);
-   		serial.writeLine("IR receive...002");
 
 	        let t0 = control.micros();
-   		serial.writeLine("IR receive...003 : t0=" + t0);
 	        while (pins.digitalReadPin(PIN_IR) == 0);
 	        let t1 = control.micros();
-   		serial.writeLine("IR receive...004 : t1=" + t1);
 
 	        let lowDuration = t1 - t0;
-      serial.writeLine("Leader Mark Low time = " + lowDuration + "us");
+	        serial.writeLine("Low time = " + lowDuration + "μs");
 
-	        // Leader Mark判定
-	        if (lowDuration < LEADER_MARK_MIN) continue;
+	        // ざっくり2段階判定
+	        if (lowDuration < LEADER_MIN) {
+	            // リーダーじゃない（データビットの一部だった）ので無視
+	            continue;
+	        }
 
+	        serial.writeLine("Leader Mark detected!");
 
-	        // ★ 2. Leader Space (High)を検出
+	        // ★ 2. Leader Space (Highパルス)
 	        let t2 = control.micros();
 	        while (pins.digitalReadPin(PIN_IR) == 1);
 	        let t3 = control.micros();
 
 	        let highDuration = t3 - t2;
+	        serial.writeLine("Leader Space High time = " + highDuration + "us);
 
-	        if (highDuration < LEADER_SPACE_MIN) continue;
+	        if (highDuration < LEADER_MIN) continue;  // Leader Spaceが短すぎたら無視
 
-      serial.writeLine("Leader Space High time = " + highDuration + "us");
+	        serial.writeLine("Leader Space detected!");
 
 	        // ★ 3. データビット受信（8ビット）
 	        let bits = 0
 	        for (let i = 0; i < 8; i++) {
-	            // まずLowパルス（区切り）を測定
+	            // Lowパルス（ビット区切り）を受信
 	            let t4 = control.micros();
 	            while (pins.digitalReadPin(PIN_IR) == 0);
 	            let t5 = control.micros();
 
 	            let spaceDuration = t5 - t4;
 	            if (!within(spaceDuration, BIT_SPACE)) {
-	                serial.writeLine("Bit Space error: " + spaceDuration + "us");
+	                serial.writeLine("Bit Space error : " + spaceDuration + "us");
 	                bits = -1;
 	                break;
 	            }
 
-	            // 次にHighパルス（ビット情報）を測定
+	            // Highパルス（ビット情報）を受信
 	            let t6 = control.micros();
 	            while (pins.digitalReadPin(PIN_IR) == 1);
 	            let t7 = control.micros();
@@ -901,18 +904,17 @@ const TOL = 400               // 許容誤差 (μs)
 	            let markDuration = t7 - t6;
 
 	            if (within(markDuration, BIT_MARK_1)) {
-	                bits |= 1 << i;  // "1"ならビット立てる
+	                bits |= 1 << i;  // "1"ならビットを立てる
 	            } else if (!within(markDuration, BIT_MARK_0)) {
-	                serial.writeLine("Bit Mark error: " + markDuration + "us");
+	                serial.writeLine("Bit Mark error : " + markDuration + "us");
 	                bits = -1;
 	                break;
 	            }
 	        }
 
-	        // データ受信失敗ならリトライ
-	        if (bits < 0) continue;
+	        if (bits < 0) continue; // データビット受信失敗ならループの最初に戻る
 
-	        // ★ 4. 受信データを解析
+	        // ★ 4. 受信データ解析
 	        serial.writeLine("IR received! Raw bits=" + bits);
 
 	        let systemAddr = (bits >> 4) & 0x0F    // 上位4bit（システムアドレス）
@@ -931,18 +933,18 @@ const TOL = 400               // 許容誤差 (μs)
 	            continue
 	        }
 
-	        // コマンドから種別を取得
+	        // コマンドから種別
 	        let kind = cmd   // 0 = 離脱, 1 = 検出, 2 = 先頭車両
 
 	        // システムアドレスからセンサーID変換（1〜16）
 	        let sensorID = systemAddr + 1
 
 	        // ★ 最終的な受信結果をシリアル出力
-     serial.writeLine("SensorID=" + sensorID + " Kind=" + kind)
+	        serial.writeLine("SensorID=" + sensorID + " Kind=" + kind)
 
-	        // ここで必要なら、イベント発火もできます
+	        // 必要ならイベント発火もできる
 	        // let value = (sensorID << 4) | kind
-	        // control.raiseEvent(4000, value) // EVT_IR
+	        // control.raiseEvent(4000, value)
 	    }
 	})
 
