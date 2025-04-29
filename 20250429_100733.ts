@@ -859,7 +859,7 @@ const TOL = 400               // 許容誤差 (μs)
 	        let t1 = control.micros();
 
 	        let lowDuration = t1 - t0;
-	        serial.writeLine("Low time = " + lowDuration + "μs");
+	        serial.writeLine("Low time = " + lowDuration + "us");
 
 	        // ざっくり2段階判定
 	        if (lowDuration < LEADER_MIN) {
@@ -875,7 +875,7 @@ const TOL = 400               // 許容誤差 (μs)
 	        let t3 = control.micros();
 
 	        let highDuration = t3 - t2;
-	        serial.writeLine("Leader Space High time = " + highDuration + "us);
+	        serial.writeLine("Leader Space High time = " + highDuration + "us");
 
 	        if (highDuration < LEADER_MIN) continue;  // Leader Spaceが短すぎたら無視
 
