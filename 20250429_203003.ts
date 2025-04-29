@@ -822,13 +822,13 @@ namespace plarail {
 
 const PIN_IR = DigitalPin.P16
 
-const BIT_SPACE_MIN = 410         // ビット間 Low時間（μs）560
+const BIT_SPACE_MIN = 360         // ビット間 Low時間（μs）560
 const BIT_SPACE_MAX = 710         // ビット間 Low時間（μs）
 
-const BIT_MARK_0_MIN = 410        // "0"のHigh時間（μs）560
+const BIT_MARK_0_MIN = 360        // "0"のHigh時間（μs）560
 const BIT_MARK_0_MAX = 710        // "0"のHigh時間（μs）
 
-const BIT_MARK_1_MIN = 1540       // "1"のHigh時間（μs）1690
+const BIT_MARK_1_MIN = 1400       // "1"のHigh時間（μs）1690
 const BIT_MARK_1_MAX = 1840       // "1"のHigh時間（μs）
 
 const LEADER_MARK_MIN = 8500       // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
@@ -966,8 +966,6 @@ const LEADER_SPACE_MAX = 5000       // Leader Space パルスとみなすLow時�
 	            if (bits < 0) break;
 
 
-
-
 	            // Highパルス（mark）を受信
 	            let t6 = t5;  //control.micros();
 	            let markDuration;
@@ -998,12 +996,6 @@ const LEADER_SPACE_MAX = 5000       // Leader Space パルスとみなすLow時�
 					}
 		        }
 	            if (bits < 0) break;
-
-	            
-	            //受信データを、bitsにセット
-	            if (markDuration > 1000) {
-	                bits |= 1 << i;  // "1"ならビット立てる
-	            }
 	        }
 
 	        if (bits < 0) {
@@ -1018,6 +1010,13 @@ const LEADER_SPACE_MAX = 5000       // Leader Space パルスとみなすLow時�
 				continue; // データビット受信失敗ならループの最初に戻る
 			}
 
+            //受信データを、bitsにセット
+            bits = 0;
+	        for (let i = 0; i < 8; i++) {
+	            if (markTime[i] > 1000) {
+	                bits |= 1 << i;  // "1"ならビット立てる
+	            }
+	        }
 
 			//---------------------------------------------------
 	        // ★ 4. 受信データ解析
