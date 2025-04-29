@@ -826,6 +826,10 @@ const BIT_MARK_0 = 560        // "0"のHigh時間（μs）
 const BIT_MARK_1 = 1690       // "1"のHigh時間（μs）
 const TOL = 400               // 許容誤差 (μs)
 const LEADER_MIN = 2000       // LeaderパルスとみなすLow時間（ざっくり2ms以上）
+const LEADER_MARK_MIN = 8500       // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
+const LEADER_MARK_MAX = 9500       // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
+const LEADER_SPACE_MIN = 4000       // Leader Space パルスとみなすLow時間（ざっくり2ms以上）
+const LEADER_SPACE_MAX = 5000       // Leader Space パルスとみなすLow時間（ざっくり2ms以上）
 const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 
 
@@ -846,44 +850,84 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 	    pins.setPull(DigitalPin.P16, PinPullMode.PullUp);
 
 	    while (true) {
-
-	        // ★ 1. Leader Mark検出（Lowパルス）
+			//---------------------------------------------------
+	        // ★ 1. Leader Mark検出
+			//---------------------------------------------------
+			// リーダー Mark 開始（Lowパルス）まで待機
 	        while (pins.digitalReadPin(PIN_IR) == 1);
 
+	        // リーダー Mark 開始（↓立ち下がり）を検出
 	        let t0 = control.micros();
-	        while (pins.digitalReadPin(PIN_IR) == 0);
-	        let t1 = control.micros();
+	        let t1;
+	        
+			let lowDuration = 0;
+			let loopFlag = false;
+			
+			while (true) {
+		        // リーダー Mark が終了（High）まで待機
+		        while (pins.digitalReadPin(PIN_IR) == 0);
+		        
+		        // リーダー Mark 終了（↑立ち上がり）を検出
+		        t1 = control.micros();
 
-	        let lowDuration = t1 - t0;
-	        serial.writeLine("Low time = " + lowDuration + "us");
+		        lowDuration = t1 - t0;
+		        serial.writeLine("Low time = " + lowDuration + "us");
 
-	        // ★ ノイズフィルタ（300μs未満は無視）
-	        if (lowDuration < NOISE_FILTER) {
-	            serial.writeLine("noise : " + lowDuration + "us");
-	            continue;
-	        }
+		        // ★ リーダー判定（LEADER_MARK_MIN以下）
+		        if (lowDuration < LEADER_MARK_MIN) {
+		            serial.writeLine("not Leader : lowDuration < LEADER_MARK_MIN");
+		            continue;
+		        } else if (lowDuration > LEADER_MARK_MAX) {
+		            serial.writeLine("not Leader : lowDuration > LEADER_MARK_MAX");
+					loopFlag = true;
+					break;
+				} else {
+			        serial.writeLine("Leader Mark detected!");
+					loopFlag = false;
+					break;
+				}
+		    }
+		    if (loopFlag == true) continue;
 
-	        // ★ リーダー判定（2ms以上）
-	        if (lowDuration < LEADER_MIN) {
-	            serial.writeLine("not Leader");
-	            continue;
-	        }
-
-	        serial.writeLine("Leader Mark detected!");
-
-	        // ★ 2. Leader Space (Highパルス)
+			//---------------------------------------------------
+	        // ★ 2. Leader Space検出
+			//---------------------------------------------------
+	        // リーダー Space 開始（↑立ちあがり）状態でここに来る
 	        let t2 = control.micros();
-	        while (pins.digitalReadPin(PIN_IR) == 1);
-	        let t3 = control.micros();
+			let t3;
+			
+			let highDuration = 0;
+			loopFlag = false;
+			
+			while (true) {
+		        // リーダー Space が終了（Lo）まで待機
+		        while (pins.digitalReadPin(PIN_IR) == 1);
+		        
+		        // リーダー Space 終了（↓立ち下がり）を検出
+		        t3 = control.micros();
 
-	        let highDuration = t3 - t2;
-	        serial.writeLine("Leader Space High time = " + highDuration + "us");
+		        highDuration = t3 - t2;
+		        serial.writeLine("Leader Space High time = " + highDuration + "us");
 
-	        if (highDuration < LEADER_MIN) continue;
+		        // ★ スペース判定（LEADER_SPACE_MIN以下）
+		        if (highDuration < LEADER_SPACE_MIN) {
+		            serial.writeLine("not Leader : highDuration < LEADER_SPACE_MIN");
+		            continue;
+		        } else if (highDuration > LEADER_SPACE_MAX) {
+		            serial.writeLine("not Leader : highDuration > LEADER_SPACE_MAX");
+					loopFlag = true;
+					break;
+				} else {
+			        serial.writeLine("Leader Space detected!");
+					loopFlag = false;
+					break;
+				}
+			}
+		    if (loopFlag == true) continue;
 
-	        serial.writeLine("Leader Space detected!");
-
+			//---------------------------------------------------
 	        // ★ 3. データビット受信（8ビット）
+			//---------------------------------------------------
 	        let bits = 0
 	        for (let i = 0; i < 8; i++) {
 	            // Lowパルス（区切り）を受信
