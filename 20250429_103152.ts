@@ -819,13 +819,11 @@ namespace plarail {
     })
 */
 const PIN_IR = DigitalPin.P16
-const LEADER_MARK_MIN = 6000  // Leader Mark認識下限（μs）
-const LEADER_SPACE_MIN = 3000 // Leader Space認識下限（μs）
-const BIT_SPACE = 560         // ビット間のLow長（μs）
-const BIT_MARK_0 = 560        // "0"のHigh長（μs）
-const BIT_MARK_1 = 1690       // "1"のHigh長（μs）
+const BIT_SPACE = 560         // ビット区切りLow時間（μs）
+const BIT_MARK_0 = 560        // "0"のHigh時間（μs）
+const BIT_MARK_1 = 1690       // "1"のHigh時間（μs）
 const TOL = 400               // 許容誤差 (μs)
-
+const LEADER_MIN = 2000       // 2ms以上のLowをリーダーとみなす（ざっくり）
 
 	//-------------------------------------------------
 	// within関数（誤差を許容して比較する）
@@ -834,11 +832,6 @@ const TOL = 400               // 許容誤差 (μs)
 	    return x > target - TOL && x < target + TOL
 	}
 
-
-
-
-   		serial.writeLine("IR receive...004 : t1=" + t1);
-      serial.writeLine("Leader Mark Low time = " + lowDuration + "us");
 
 
 	//===============================================
