@@ -871,18 +871,18 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 		        t1 = control.micros();
 
 		        lowDuration = t1 - t0;
-		        serial.writeLine("Low time = " + lowDuration + "us");
+//		        serial.writeLine("Low time = " + lowDuration + "us");
 
 		        // ★ リーダー判定（LEADER_MARK_MIN以下）
 		        if (lowDuration < LEADER_MARK_MIN) {
-		            serial.writeLine("not Leader : lowDuration < LEADER_MARK_MIN");
+//		            serial.writeLine("not Leader : lowDuration < LEADER_MARK_MIN");
 		            continue;
 		        } else if (lowDuration > LEADER_MARK_MAX) {
-		            serial.writeLine("not Leader : lowDuration > LEADER_MARK_MAX");
+//		            serial.writeLine("not Leader : lowDuration > LEADER_MARK_MAX");
 					loopFlag = true;
 					break;
 				} else {
-			        serial.writeLine("Leader Mark detected!");
+			        serial.writeLine("Leader Mark detected! : lowDuration + "us");
 					loopFlag = false;
 					break;
 				}
@@ -893,7 +893,7 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 	        // ★ 2. Leader Space検出
 			//---------------------------------------------------
 	        // リーダー Space 開始（↑立ちあがり）状態でここに来る
-	        let t2 = control.micros();
+	        let t2 = t1;	//control.micros();
 			let t3;
 			
 			let highDuration = 0;
