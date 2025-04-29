@@ -855,15 +855,17 @@ const TOL = 400               // 許容誤差 (μs)
    		serial.writeLine("IR receive...002");
 
 	        let t0 = control.micros();
+   		serial.writeLine("IR receive...003 : t0=" + t0);
 	        while (pins.digitalReadPin(PIN_IR) == 0);
 	        let t1 = control.micros();
+   		serial.writeLine("IR receive...004 : t1=" + t1);
 
 	        let lowDuration = t1 - t0;
+      serial.writeLine("Leader Mark Low時間 = " + lowDuration + "μs");
 
 	        // Leader Mark判定
 	        if (lowDuration < LEADER_MARK_MIN) continue;
 
-      serial.writeLine("Leader Mark Low時間 = " + lowDuration + "μs");
 
 	        // ★ 2. Leader Space (High)を検出
 	        let t2 = control.micros();
