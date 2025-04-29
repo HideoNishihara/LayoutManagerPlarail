@@ -882,7 +882,7 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 					loopFlag = true;
 					break;
 				} else {
-			        serial.writeLine("Leader Mark detected! : lowDuration + "us");
+			        serial.writeLine("Leader Mark detected! : " + lowDuration + "us");
 					loopFlag = false;
 					break;
 				}
