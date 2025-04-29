@@ -944,7 +944,13 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 	        let t5;
 	        let spaceDuration
 	        
+	        let ii;
+	        
 	        for (let i = 0; i < 8; i++) {
+	            
+	            ii = i;
+	            spaceTime[i] = -1;
+	            markTime[i] = -1;
 	            
 	            // Lowパルス（space）を受信
 	            let t4 = t3;  //control.micros();
@@ -1014,7 +1020,12 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 	        if (bits < 0) {
 		        serial.writeLine("Leader Mark =" + lowDuration + "us");
 		        serial.writeLine("Leader Space =" + highDuration + "us");
-		        serial.writeLine("IR received! Raw bits=" + bits + " (error)");
+		        
+		        let str = "";
+		        for (let i = 0; i <= ii; i++) {
+			        serial.writeLine("space time[" + i + "] =" + spaceTime[i] + "us");
+			        serial.writeLine("mark  time[" + i + "] =" + markTime[i] + "us");
+				}
 				continue; // データビット受信失敗ならループの最初に戻る
 			}
 
