@@ -845,7 +845,7 @@ const TOL = 400               // 許容誤差 (μs)
 	control.inBackground(function () {
    		serial.writeLine("IR receive...");
 
-	    //pins.setPull(DigitalPin.P16, PinPullMode.PullUp);
+	    pins.setPull(DigitalPin.P16, PinPullMode.PullUp);
 
 	    while (true) {
 
