@@ -943,6 +943,7 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 	        
 	        let bits = 0;
 	        let t5;
+	        let spaceDuration
 	        
 	        for (let i = 0; i < 8; i++) {
 	            
@@ -954,7 +955,7 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 		            
 		            t5 = control.micros();
 
-		            let spaceDuration = t5 - t4;
+		            spaceDuration = t5 - t4;
 
 		            // space長のチェック
 		            if (spaceDuration < BIT_SPACE_MIN) {
@@ -976,13 +977,14 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 
 	            // Highパルス（mark）を受信
 	            let t6 = t5;  //control.micros();
+	            let markDuration;
 	            
 	            while (true) {
 		            while (pins.digitalReadPin(PIN_IR) == 1);
 		            
 		            let t7 = control.micros();
 
-		            let markDuration = t7 - t6;
+		            markDuration = t7 - t6;
 		        
 		            // mark長のチェック
 		            if (markDuration < BIT_MARK_0_MIN) {
