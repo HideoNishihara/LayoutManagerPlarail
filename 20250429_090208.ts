@@ -819,7 +819,7 @@ namespace plarail {
     })
 */
 const PIN_IR = DigitalPin.P16
-const LEADER_MARK_MIN = 4000  // Leader Mark認識下限（μs）
+const LEADER_MARK_MIN = 8000  // Leader Mark認識下限（μs）
 const LEADER_SPACE_MIN = 4000 // Leader Space認識下限（μs）
 const BIT_SPACE = 560         // ビット間のLow長（μs）
 const BIT_MARK_0 = 560        // "0"のHigh長（μs）
@@ -845,12 +845,14 @@ const TOL = 400               // 許容誤差 (μs)
 	control.inBackground(function () {
    		serial.writeLine("IR receive...");
 
-	    pins.setPull(DigitalPin.P16, PinPullMode.PullUp);
+	    //pins.setPull(DigitalPin.P16, PinPullMode.PullUp);
 
 	    while (true) {
 
 	        // ★ 1. Leader Mark (Low)を検出
+   		serial.writeLine("IR receive...001");
 	        while (pins.digitalReadPin(PIN_IR) == 1);
+   		serial.writeLine("IR receive...002");
 
 	        let t0 = control.micros();
 	        while (pins.digitalReadPin(PIN_IR) == 0);
