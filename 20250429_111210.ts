@@ -818,12 +818,16 @@ namespace plarail {
         }
     })
 */
+
+
 const PIN_IR = DigitalPin.P16
-const BIT_SPACE = 560         // ビット区切りLow時間（μs）
+const BIT_SPACE = 560         // ビット間 Low時間（μs）
 const BIT_MARK_0 = 560        // "0"のHigh時間（μs）
 const BIT_MARK_1 = 1690       // "1"のHigh時間（μs）
 const TOL = 400               // 許容誤差 (μs)
-const LEADER_MIN = 2000       // 2ms以上のLowをリーダーとみなす（ざっくり）
+const LEADER_MIN = 2000       // LeaderパルスとみなすLow時間（ざっくり2ms以上）
+const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
+
 
 	//-------------------------------------------------
 	// within関数（誤差を許容して比較する）
@@ -831,7 +835,6 @@ const LEADER_MIN = 2000       // 2ms以上のLowをリーダーとみなす（�
 	function within(x: number, target: number): boolean {
 	    return x > target - TOL && x < target + TOL
 	}
-
 
 
 	//===============================================
@@ -844,7 +847,7 @@ const LEADER_MIN = 2000       // 2ms以上のLowをリーダーとみなす（�
 
 	    while (true) {
 
-	        // ★ 1. リーダーMark検出（Lowパルス）
+	        // ★ 1. Leader Mark検出（Lowパルス）
 	        while (pins.digitalReadPin(PIN_IR) == 1);
 
 	        let t0 = control.micros();
@@ -854,9 +857,15 @@ const LEADER_MIN = 2000       // 2ms以上のLowをリーダーとみなす（�
 	        let lowDuration = t1 - t0;
 	        serial.writeLine("Low time = " + lowDuration + "us");
 
-	        // ざっくり2段階判定
+	        // ★ ノイズフィルタ（300μs未満は無視）
+	        if (lowDuration < NOISE_FILTER) {
+	            serial.writeLine("noise : " + lowDuration + "us");
+	            continue;
+	        }
+
+	        // ★ リーダー判定（2ms以上）
 	        if (lowDuration < LEADER_MIN) {
-	            // リーダーじゃない（データビットの一部だった）ので無視
+	            serial.writeLine("not Leader");
 	            continue;
 	        }
 
@@ -870,19 +879,27 @@ const LEADER_MIN = 2000       // 2ms以上のLowをリーダーとみなす（�
 	        let highDuration = t3 - t2;
 	        serial.writeLine("Leader Space High time = " + highDuration + "us");
 
-	        if (highDuration < LEADER_MIN) continue;  // Leader Spaceが短すぎたら無視
+	        if (highDuration < LEADER_MIN) continue;
 
 	        serial.writeLine("Leader Space detected!");
 
 	        // ★ 3. データビット受信（8ビット）
 	        let bits = 0
 	        for (let i = 0; i < 8; i++) {
-	            // Lowパルス（ビット区切り）を受信
+	            // Lowパルス（区切り）を受信
 	            let t4 = control.micros();
 	            while (pins.digitalReadPin(PIN_IR) == 0);
 	            let t5 = control.micros();
 
 	            let spaceDuration = t5 - t4;
+
+	            // ★ ノイズフィルタ（300μs未満無視）
+	            if (spaceDuration < NOISE_FILTER) {
+	                serial.writeLine("ビットSpace noise : " + spaceDuration + "us");
+	                bits = -1;
+	                break;
+	            }
+
 	            if (!within(spaceDuration, BIT_SPACE)) {
 	                serial.writeLine("Bit Space error : " + spaceDuration + "us");
 	                bits = -1;
@@ -897,7 +914,7 @@ const LEADER_MIN = 2000       // 2ms以上のLowをリーダーとみなす（�
 	            let markDuration = t7 - t6;
 
 	            if (within(markDuration, BIT_MARK_1)) {
-	                bits |= 1 << i;  // "1"ならビットを立てる
+	                bits |= 1 << i;  // "1"ならビット立てる
 	            } else if (!within(markDuration, BIT_MARK_0)) {
 	                serial.writeLine("Bit Mark error : " + markDuration + "us");
 	                bits = -1;
@@ -935,7 +952,7 @@ const LEADER_MIN = 2000       // 2ms以上のLowをリーダーとみなす（�
 	        // ★ 最終的な受信結果をシリアル出力
 	        serial.writeLine("SensorID=" + sensorID + " Kind=" + kind)
 
-	        // 必要ならイベント発火もできる
+	        // 必要ならここでイベント発火もできる
 	        // let value = (sensorID << 4) | kind
 	        // control.raiseEvent(4000, value)
 	    }
