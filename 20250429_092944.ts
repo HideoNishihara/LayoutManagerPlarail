@@ -861,7 +861,7 @@ const TOL = 400               // 許容誤差 (μs)
    		serial.writeLine("IR receive...004 : t1=" + t1);
 
 	        let lowDuration = t1 - t0;
-      serial.writeLine("Leader Mark Low時間 = " + lowDuration + "μs");
+      serial.writeLine("Leader Mark Low time = " + lowDuration + "us");
 
 	        // Leader Mark判定
 	        if (lowDuration < LEADER_MARK_MIN) continue;
@@ -876,7 +876,7 @@ const TOL = 400               // 許容誤差 (μs)
 
 	        if (highDuration < LEADER_SPACE_MIN) continue;
 
-      serial.writeLine("Leader Space High時間 = " + highDuration + "μs");
+      serial.writeLine("Leader Space High time = " + highDuration + "us");
 
 	        // ★ 3. データビット受信（8ビット）
 	        let bits = 0
@@ -888,7 +888,7 @@ const TOL = 400               // 許容誤差 (μs)
 
 	            let spaceDuration = t5 - t4;
 	            if (!within(spaceDuration, BIT_SPACE)) {
-	                serial.writeLine("Bit Spaceエラー: " + spaceDuration + "μs");
+	                serial.writeLine("Bit Space error: " + spaceDuration + "us");
 	                bits = -1;
 	                break;
 	            }
@@ -903,7 +903,7 @@ const TOL = 400               // 許容誤差 (μs)
 	            if (within(markDuration, BIT_MARK_1)) {
 	                bits |= 1 << i;  // "1"ならビット立てる
 	            } else if (!within(markDuration, BIT_MARK_0)) {
-	                serial.writeLine("Bit Markエラー: " + markDuration + "μs");
+	                serial.writeLine("Bit Mark error: " + markDuration + "us");
 	                bits = -1;
 	                break;
 	            }
