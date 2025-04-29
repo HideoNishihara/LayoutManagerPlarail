@@ -821,11 +821,19 @@ namespace plarail {
 
 
 const PIN_IR = DigitalPin.P16
-const BIT_SPACE = 560         // ビット間 Low時間（μs）
-const BIT_MARK_0 = 560        // "0"のHigh時間（μs）
-const BIT_MARK_1 = 1690       // "1"のHigh時間（μs）
+
+const BIT_SPACE_MIN = 460         // ビット間 Low時間（μs）
+const BIT_SPACE_MAX = 660         // ビット間 Low時間（μs）
+
+const BIT_MARK_0_MIN = 460        // "0"のHigh時間（μs）
+const BIT_MARK_0_MAX = 660        // "0"のHigh時間（μs）
+
+const BIT_MARK_1_MIN = 1590       // "1"のHigh時間（μs）
+const BIT_MARK_1_MAX = 1790       // "1"のHigh時間（μs）
+
 const TOL = 400               // 許容誤差 (μs)
 const LEADER_MIN = 2000       // LeaderパルスとみなすLow時間（ざっくり2ms以上）
+
 const LEADER_MARK_MIN = 8500       // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
 const LEADER_MARK_MAX = 9500       // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
 const LEADER_SPACE_MIN = 4000       // Leader Space パルスとみなすLow時間（ざっくり2ms以上）
@@ -882,14 +890,14 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 					loopFlag = true;
 					break;
 				} else {
-			        serial.writeLine("Leader Mark detected! : " + lowDuration + "us");
+//			        serial.writeLine("Leader Mark detected! : " + lowDuration + "us");
 					loopFlag = false;
 					break;
 				}
 		    }
 		    if (loopFlag == true) continue;
 
-			//---------------------------------------------------
+			//--------------------------------------------------- https://github.com/HideoNishihara/LayoutManagerPlarail
 	        // ★ 2. Leader Space検出
 			//---------------------------------------------------
 	        // リーダー Space 開始（↑立ちあがり）状態でここに来る
@@ -907,18 +915,18 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 		        t3 = control.micros();
 
 		        highDuration = t3 - t2;
-		        serial.writeLine("Leader Space High time = " + highDuration + "us");
+//		        serial.writeLine("Leader Space High time = " + highDuration + "us");
 
 		        // ★ スペース判定（LEADER_SPACE_MIN以下）
 		        if (highDuration < LEADER_SPACE_MIN) {
-		            serial.writeLine("not Leader : highDuration < LEADER_SPACE_MIN");
+//		            serial.writeLine("not Leader : highDuration < LEADER_SPACE_MIN");
 		            continue;
 		        } else if (highDuration > LEADER_SPACE_MAX) {
-		            serial.writeLine("not Leader : highDuration > LEADER_SPACE_MAX");
+//		            serial.writeLine("not Leader : highDuration > LEADER_SPACE_MAX");
 					loopFlag = true;
 					break;
 				} else {
-			        serial.writeLine("Leader Space detected!");
+			        serial.writeLine("Leader Space detected! : " + highDuration + "us");
 					loopFlag = false;
 					break;
 				}
@@ -928,34 +936,66 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 			//---------------------------------------------------
 	        // ★ 3. データビット受信（8ビット）
 			//---------------------------------------------------
-	        let bits = 0
+			//ここには、Lo で来る
+			
+			let spaceTime = [];
+			let markTime = [];
+	        
+	        let bits = 0;
+	        let t5;
+	        
 	        for (let i = 0; i < 8; i++) {
-	            // Lowパルス（区切り）を受信
-	            let t4 = control.micros();
-	            while (pins.digitalReadPin(PIN_IR) == 0);
-	            let t5 = control.micros();
+	            
+	            // Lowパルス（space）を受信
+	            let t4 = t3;  //control.micros();
+	            
+	            while (true) {
+		            while (pins.digitalReadPin(PIN_IR) == 0);
+		            
+		            t5 = control.micros();
 
-	            let spaceDuration = t5 - t4;
+		            let spaceDuration = t5 - t4;
 
-	            // ★ ノイズフィルタ（300μs未満無視）
-	            if (spaceDuration < NOISE_FILTER) {
-	                serial.writeLine("ビットSpace noise : " + spaceDuration + "us");
-	                bits = -1;
-	                break;
+		            // space長のチェック
+		            if (spaceDuration < BIT_SPACE_MIN) {
+		                continue;
+		            } else if (spaceDuration > BIT_SPACE_MAX) {
+						spaceTime[i] = spaceDuration;
+						bits = -1;
+						break;
+					} else {
+						spaceTime[i] = spaceDuration;
+						break;
+					}
+
 	            }
+	            id (bits < 0) break;
 
-	            if (!within(spaceDuration, BIT_SPACE)) {
-	                serial.writeLine("Bit Space error : " + spaceDuration + "us");
-	                bits = -1;
-	                break;
-	            }
 
-	            // Highパルス（ビット情報）を受信
-	            let t6 = control.micros();
-	            while (pins.digitalReadPin(PIN_IR) == 1);
-	            let t7 = control.micros();
 
-	            let markDuration = t7 - t6;
+
+	            // Highパルス（mark）を受信
+	            let t6 = t5;  //control.micros();
+	            
+	            while (true) {
+		            while (pins.digitalReadPin(PIN_IR) == 1);
+		            let t7 = control.micros();
+
+		            let markDuration = t7 - t6;
+		        
+		            // mark長のチェック
+		            if (spaceDuration < BIT_SPACE_MIN) {
+		                continue;
+		            } else if (spaceDuration > BIT_SPACE_MAX) {
+						spaceTime[i] = spaceDuration;
+						bits = -1;
+						break;
+					} else {
+						spaceTime[i] = spaceDuration;
+						break;
+					}
+		        }
+		        
 
 	            if (within(markDuration, BIT_MARK_1)) {
 	                bits |= 1 << i;  // "1"ならビット立てる
