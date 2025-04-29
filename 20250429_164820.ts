@@ -969,7 +969,7 @@ const NOISE_FILTER = 300      // ノイズとみなす上限（μs）
 					}
 
 	            }
-	            id (bits < 0) break;
+	            if (bits < 0) break;
 
 
 
