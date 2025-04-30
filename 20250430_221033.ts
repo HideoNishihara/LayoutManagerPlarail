@@ -822,28 +822,28 @@ namespace plarail {
 
 const PIN_IR = DigitalPin.P16
 
-const LDR_MARK   = 9000
-const LDR_SPACE  = 4500
+const LDR_MARK   = 6000;		//9000;
+const LDR_SPACE  = 4500;
 
-const BIT_MARK   =  560
+const BIT_MARK   =  560;
 
-const BIT0_SPACE =  560
-const BIT1_SPACE = 1690
+const BIT0_SPACE =  560;
+const BIT1_SPACE = 1120;		//1690;
 
 
-const LEADER_MARK_MIN = LDR_MARK-500          // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
-const LEADER_MARK_MAX = LDR_MARK+500          // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
-const LEADER_SPACE_MIN = LDR_SPACE-500        // Leader Space パルスとみなすLow時間（ざっくり2ms以上）
-const LEADER_SPACE_MAX = LDR_SPACE+500        // Leader Space パルスとみなすLow時間（ざっくり2ms以上）
+const LEADER_MARK_MIN = LDR_MARK - 500;          // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
+const LEADER_MARK_MAX = LDR_MARK + 500;          // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
+const LEADER_SPACE_MIN = LDR_SPACE - 500;        // Leader Space パルスとみなすLow時間（ざっくり2ms以上）
+const LEADER_SPACE_MAX = LDR_SPACE + 500;        // Leader Space パルスとみなすLow時間（ざっくり2ms以上）
 
-const BIT_MARK_MIN = BIT_MARK-200             // ビット間 Hi時間（μs）
-const BIT_MARK_MAX = BIT_MARK+200             // ビット間 Hi時間（μs）
+const BIT_MARK_MIN = BIT_MARK - 200;             // ビット間 Hi時間（μs）
+const BIT_MARK_MAX = BIT_MARK + 200;             // ビット間 Hi時間（μs）
 
-const BIT_SPACE_0_MIN = BIT0_SPACE-200        // "0"のLo時間（μs）
-const BIT_SPACE_0_MAX = BIT0_SPACE+200        // "0"のLo時間（μs）
+const BIT_SPACE_0_MIN = BIT0_SPACE - 200;        // "0"のLo時間（μs）
+const BIT_SPACE_0_MAX = BIT0_SPACE + 200;        // "0"のLo時間（μs）
 
-const BIT_SPACE_1_MIN = BIT1_SPACE-200        // "1"のLo時間（μs）
-const BIT_SPACE_1_MAX = BIT1_SPACE+200        // "1"のLo時間（μs）
+const BIT_SPACE_1_MIN = BIT1_SPACE - 200;        // "1"のLo時間（μs）
+const BIT_SPACE_1_MAX = BIT1_SPACE + 200;        // "1"のLo時間（μs）
 
 
 	//===============================================
