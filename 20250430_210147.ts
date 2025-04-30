@@ -822,19 +822,28 @@ namespace plarail {
 
 const PIN_IR = DigitalPin.P16
 
-const BIT_SPACE_MIN = 640         // ビット間 Low時間（μs）840   560
-const BIT_SPACE_MAX = 990         // ビット間 Low時間（μs）
+const LDR_MARK    9000
+const LDR_SPACE   4500
 
-const BIT_MARK_0_MIN = 640        // "0"のHigh時間（μs）840     560
-const BIT_MARK_0_MAX = 990        // "0"のHigh時間（μs）
+const BIT_MARK     560
 
-const BIT_MARK_1_MIN = 1400       // "1"のHigh時間（μs）1690
-const BIT_MARK_1_MAX = 1840       // "1"のHigh時間（μs）
+const BIT0_SPACE   560
+const BIT1_SPACE  1690
 
-const LEADER_MARK_MIN = 8500       // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
-const LEADER_MARK_MAX = 9500       // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
-const LEADER_SPACE_MIN = 4000       // Leader Space パルスとみなすLow時間（ざっくり2ms以上）
-const LEADER_SPACE_MAX = 5000       // Leader Space パルスとみなすLow時間（ざっくり2ms以上）
+
+const LEADER_MARK_MIN = LDR_MARK-500          // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
+const LEADER_MARK_MAX = LDR_MARK+500          // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
+const LEADER_SPACE_MIN = LDR_SPACE-500        // Leader Space パルスとみなすLow時間（ざっくり2ms以上）
+const LEADER_SPACE_MAX = LDR_SPACE+500        // Leader Space パルスとみなすLow時間（ざっくり2ms以上）
+
+const BIT_MARK_MIN = BIT_MARK-200             // ビット間 Hi時間（μs）
+const BIT_MARK_MAX = BIT_MARK+200             // ビット間 Hi時間（μs）
+
+const BIT_SPACE_0_MIN = BIT0_SPACE-200        // "0"のLo時間（μs）
+const BIT_SPACE_0_MAX = BIT0_SPACE+200        // "0"のLo時間（μs）
+
+const BIT_SPACE_1_MIN = BIT1_SPACE-200        // "1"のLo時間（μs）
+const BIT_SPACE_1_MAX = BIT1_SPACE+200        // "1"のLo時間（μs）
 
 
 	//===============================================
@@ -925,8 +934,8 @@ const LEADER_SPACE_MAX = 5000       // Leader Space パルスとみなすLow時�
 			//---------------------------------------------------
 			//ここには、Lo で来る
 			
-			let spaceTime = [];
 			let markTime = [];
+			let spaceTime = [];
 	        
 	        let bits = 0;
 	        let t5;
@@ -936,29 +945,29 @@ const LEADER_SPACE_MAX = 5000       // Leader Space パルスとみなすLow時�
 	        for (let i = 0; i < 8; i++) {
 	            
 	            ii = i;
-	            spaceTime[i] = -1;
 	            markTime[i] = -1;
+	            spaceTime[i] = -1;
 	            
-	            // Lowパルス（space）を受信
-	            let t4 = t3;  //control.micros();
-	        	let spaceDuration
+	            // Lowパルス（MARK）を受信
+	            let t4 = t3;
+	        	let markDuration
 	            
 	            while (true) {
 		            while (pins.digitalReadPin(PIN_IR) == 0);
 		            
 		            t5 = control.micros();
 
-		            spaceDuration = t5 - t4;
+		            markDuration = t5 - t4;
 
-		            // space長のチェック
-		            if (spaceDuration < BIT_SPACE_MIN) {
+		            // mark長のチェック
+		            if (markDuration < BIT_MARK_MIN) {
 		                continue;
-		            } else if (spaceDuration > BIT_SPACE_MAX) {
-						spaceTime[i] = spaceDuration;
+		            } else if (markDuration > BIT_MARK_MAX) {
+						markTime[i] = markDuration;
 						bits = -1;
 						break;
 					} else {
-						spaceTime[i] = spaceDuration;
+						markTime[i] = markDuration;
 						break;
 					}
 
@@ -966,9 +975,9 @@ const LEADER_SPACE_MAX = 5000       // Leader Space パルスとみなすLow時�
 	            if (bits < 0) break;
 
 
-	            // Highパルス（mark）を受信
-	            let t6 = t5;  //control.micros();
-	            let markDuration;
+	            // Highパルス（space）を受信	この長さでbitデータを取得
+	            let t6 = t5;
+	            let spaceDuration;
 	            
 	            while (true) {
 		            while (pins.digitalReadPin(PIN_IR) == 1);
@@ -976,22 +985,22 @@ const LEADER_SPACE_MAX = 5000       // Leader Space パルスとみなすLow時�
 		            let t7 = control.micros();
 		            t3 = t7;
 
-		            markDuration = t7 - t6;
+		            spaceDuration = t7 - t6;
 		        
-		            // mark長のチェック
-		            if (markDuration < BIT_MARK_0_MIN) {
+		            // space長のチェック
+		            if (spaceDuration < BIT_SPACE_0_MIN) {
 		                continue;
-		            } else if (markDuration < BIT_MARK_0_MAX) {
-						markTime[i] = markDuration;
+		            } else if (spaceDuration < BIT_SPACE_0_MAX) {
+						spaceTime[i] = spaceDuration;
 						break;
-		            } else if (markDuration < BIT_MARK_1_MIN) {
+		            } else if (spaceDuration < BIT_SPACE_1_MIN) {
 		                continue;
-		            } else if (markDuration > BIT_MARK_1_MAX) {
-						spaceTime[i] = markDuration;
+		            } else if (spaceDuration > BIT_SPACE_1_MAX) {
+						spaceTime[i] = spaceDuration;
 						bits = -1;
 						break;
 					} else {
-						markTime[i] = markDuration;
+						spaceTime[i] = spaceDuration;
 						break;
 					}
 		        }
@@ -1004,8 +1013,8 @@ const LEADER_SPACE_MAX = 5000       // Leader Space パルスとみなすLow時�
 		        
 		        let str = "";
 		        for (let i = 0; i <= ii; i++) {
-			        serial.writeLine("space time[" + i + "] =" + spaceTime[i] + "us");
 			        serial.writeLine("mark  time[" + i + "] =" + markTime[i] + "us");
+			        serial.writeLine("space time[" + i + "] =" + spaceTime[i] + "us");
 				}
 				continue; // データビット受信失敗ならループの最初に戻る
 			}
@@ -1013,7 +1022,7 @@ const LEADER_SPACE_MAX = 5000       // Leader Space パルスとみなすLow時�
             //受信データを、bitsにセット
             bits = 0;
 	        for (let i = 7; i >= 0; i--) {
-	            if (markTime[7-i] > 1000) {
+	            if (spaceTime[7-i] > (BIT0_SPACE + BIT1_SPACE)/2) {
 	                bits |= (1 << i);  // "1"ならビット立てる
 	            }
 	        }
