@@ -822,13 +822,13 @@ namespace plarail {
 
 const PIN_IR = DigitalPin.P16
 
-const LDR_MARK   = 6000;		//9000;
+const LDR_MARK   = 5000;		//9000;
 const LDR_SPACE  = 4500;
 
-const BIT_MARK   =  560;
+const BIT_MARK   =  400;		//560;
 
-const BIT0_SPACE =  560;
-const BIT1_SPACE = 1120;		//1690;
+const BIT0_SPACE =  400;		//560;
+const BIT1_SPACE = 1600;		//1690;
 
 
 const LEADER_MARK_MIN = LDR_MARK - 500;          // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
