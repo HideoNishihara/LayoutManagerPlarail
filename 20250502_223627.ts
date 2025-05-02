@@ -806,7 +806,7 @@ namespace plarail {
 	const BIT_SPACE_1_MIN = BIT1_SPACE - 200;        // "1"のLo時間（μs）
 	const BIT_SPACE_1_MAX = BIT1_SPACE + 200;        // "1"のLo時間（μs）
 
-
+/*
 	//===============================================
 	// IR受信デコード：メイン受信ユニット（バックグラウンド＋シリアル出力付き版）
 	//===============================================
@@ -1026,9 +1026,9 @@ namespace plarail {
 			raiseDeduplicatedEvent(sensorID, kind);
 	    }
 	})
+*/
 
-
-
+/*
 	//===============================================
 	// IR受信デコード：サブ受信ユニット（バックグラウンド＋シリアル出力付き版）
 	//===============================================
@@ -1248,7 +1248,7 @@ namespace plarail {
 			raiseDeduplicatedEvent(sensorID, kind);
 	    }
 	})
-
+*/
 
 
 
