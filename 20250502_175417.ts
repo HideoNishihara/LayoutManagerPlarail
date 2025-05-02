@@ -74,7 +74,7 @@ namespace plarail {
 
 
 	//===============================================
-	//	センサー %sensor で先頭車両を検出したとき（磁気センサー：コマンド=2）
+	//	センサー関連
 	//===============================================
     // センサーID（0〜15）をプルダウンで指定するための列挙型
     export enum SensorID {
@@ -119,6 +119,24 @@ namespace plarail {
     const EVT_IR = 4000      // channel
     /** value = (sensorID<<4) | kind  とする (上位4bit:ID / 下位4bit:種別) */
 
+	//===============================================
+	//  イベント重複除去処理（最大256種）
+	//===============================================
+	const lastReceivedTime: number[] = []
+	function raiseDeduplicatedEvent(sensorID: number, kind: number) {
+	    const value = (sensorID << 4) | kind
+	    const now = control.millis()
+	    const THRESHOLD_MS = 500
+	    const lastTime = lastReceivedTime[value] || 0
+	    if (now - lastTime > THRESHOLD_MS) {
+	        lastReceivedTime[value] = now
+	        control.raiseEvent(EVT_IR, value)
+	    }
+	}
+
+	//===============================================
+	//	センサー %sensor で先頭車両を検出したとき（磁気センサー：コマンド=2）
+	//===============================================
     //% block="%sensor で 先頭車両 を検出したとき"
     //% blockId=plarail_onHead
     //% weight=790
@@ -768,91 +786,40 @@ namespace plarail {
     //	IR 受信デコード (バックグラウンド)
 	//=================================================
 	//	受信用ハード定数
-/*
-    const PIN_IR = DigitalPin.P16
-    const LEADER_MARK = 9000     // µs 9 ms
-    const LEADER_SPACE = 4500    // 4.5 ms
-    const MARK_1 = 1690          // 1 の mark
-    const MARK_0 = 560           // 0 の mark
-    const TOL = 400              // ±誤差許容
+	const PIN_IR = DigitalPin.P16;
+	const PIN_IR2 = DigitalPin.P13;
 
-    control.inBackground(function () {
-        pins.setPull(PIN_IR, PinPullMode.PullUp)
+	const LDR_MARK   = 5000;		//9000;
+	const LDR_SPACE  = 4500;
 
-        while (true) {
-            // 4-1. Leader の Hi (mark) を待つ
-            let t = pins.pulseIn(PIN_IR, PulseValue.Low, 20000)   // Low 時間 9 ms
-            if (!within(t, LEADER_MARK)) continue
+	const BIT_MARK   =  400;		//560;
 
-            // 4-2. Leader の Low (space)
-            t = pins.pulseIn(PIN_IR, PulseValue.High, 10000)      // Hi 時間 4.5 ms
-            if (!within(t, LEADER_SPACE)) continue
-
-            // 4-3. 12bit 受信 : Hi (space) – Low (mark)
-            let bits = 0
-            for (let i = 0; i < 12; i++) {
-                let space = pins.pulseIn(PIN_IR, PulseValue.Low, 3000)   // 560 µs
-                let mark  = pins.pulseIn(PIN_IR, PulseValue.High, 3000)  // 560 or 1690
-                if (!within(space, 560)) { bits = -1; break }
-
-                if (within(mark, MARK_1)) bits |= 1 << i      // 1
-                else if (!within(mark, MARK_0)) { bits = -1; break } // 不正
-            }
-            if (bits < 0) continue          // 受信失敗
-
-            // 4-4. 上位6bit と 下位6bit(反転) の整合性確認
-            let data = bits & 0x3F          // 0-5bit
-            let inv  = (bits >> 6) & 0x3F   // 6-11bit
-            if ((data ^ 0x3F) != inv) continue  // 反転一致しない
-
-            // 4-5. データを分解 → センサー ID / 種別
-            let sensorID = (data >> 2) & 0x0F       // bit0-3
-            let kind     =  data & 0x03             // bit4-5
-
-            if (sensorID == 0 || sensorID > 16) continue   // 1-16 範囲外は無視
-            if (kind > 2) continue                         // 00/01/02 以外無視
-
-            // 4-6. イベント送出
-            let value = (sensorID << 4) | kind      // 0xXY (X=ID, Y=kind)
-            control.raiseEvent(EVT_IR, value)
-        }
-    })
-*/
+	const BIT0_SPACE =  400;		//560;
+	const BIT1_SPACE = 1600;		//1690;
 
 
-const PIN_IR = DigitalPin.P16
+	const LEADER_MARK_MIN = LDR_MARK - 500;          // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
+	const LEADER_MARK_MAX = LDR_MARK + 500;          // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
+	const LEADER_SPACE_MIN = LDR_SPACE - 500;        // Leader Space パルスとみなすLow時間（ざっくり2ms以上）
+	const LEADER_SPACE_MAX = LDR_SPACE + 500;        // Leader Space パルスとみなすLow時間（ざっくり2ms以上）
 
-const LDR_MARK   = 5000;		//9000;
-const LDR_SPACE  = 4500;
+	const BIT_MARK_MIN = BIT_MARK - 200;             // ビット間 Hi時間（μs）
+	const BIT_MARK_MAX = BIT_MARK + 200;             // ビット間 Hi時間（μs）
 
-const BIT_MARK   =  400;		//560;
+	const BIT_SPACE_0_MIN = BIT0_SPACE - 200;        // "0"のLo時間（μs）
+	const BIT_SPACE_0_MAX = BIT0_SPACE + 200;        // "0"のLo時間（μs）
 
-const BIT0_SPACE =  400;		//560;
-const BIT1_SPACE = 1600;		//1690;
-
-
-const LEADER_MARK_MIN = LDR_MARK - 500;          // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
-const LEADER_MARK_MAX = LDR_MARK + 500;          // Leader Mark パルスとみなすLow時間（ざっくり2ms以上）
-const LEADER_SPACE_MIN = LDR_SPACE - 500;        // Leader Space パルスとみなすLow時間（ざっくり2ms以上）
-const LEADER_SPACE_MAX = LDR_SPACE + 500;        // Leader Space パルスとみなすLow時間（ざっくり2ms以上）
-
-const BIT_MARK_MIN = BIT_MARK - 200;             // ビット間 Hi時間（μs）
-const BIT_MARK_MAX = BIT_MARK + 200;             // ビット間 Hi時間（μs）
-
-const BIT_SPACE_0_MIN = BIT0_SPACE - 200;        // "0"のLo時間（μs）
-const BIT_SPACE_0_MAX = BIT0_SPACE + 200;        // "0"のLo時間（μs）
-
-const BIT_SPACE_1_MIN = BIT1_SPACE - 200;        // "1"のLo時間（μs）
-const BIT_SPACE_1_MAX = BIT1_SPACE + 200;        // "1"のLo時間（μs）
+	const BIT_SPACE_1_MIN = BIT1_SPACE - 200;        // "1"のLo時間（μs）
+	const BIT_SPACE_1_MAX = BIT1_SPACE + 200;        // "1"のLo時間（μs）
 
 
 	//===============================================
-	// IR受信デコード（バックグラウンド＋シリアル出力付き版）
+	// IR受信デコード：メイン受信ユニット（バックグラウンド＋シリアル出力付き版）
 	//===============================================
 	control.inBackground(function () {
-   		serial.writeLine("IR receive...");
+//serial.writeLine("IR receive...");
 
-	    pins.setPull(DigitalPin.P16, PinPullMode.PullUp);
+	    pins.setPull(PIN_IR, PinPullMode.PullUp);
 
 	    while (true) {
 			//---------------------------------------------------
@@ -889,7 +856,7 @@ const BIT_SPACE_1_MAX = BIT1_SPACE + 200;        // "1"のLo時間（μs）
 				}
 		    }
 		    if (loopFlag == true) {
-		        serial.writeLine("Leader Mark =" + lowDuration + "us (error)");
+//serial.writeLine("Leader Mark =" + lowDuration + "us (error)");
 				continue;
 			}
 
@@ -924,8 +891,8 @@ const BIT_SPACE_1_MAX = BIT1_SPACE + 200;        // "1"のLo時間（μs）
 				}
 			}
 		    if (loopFlag == true) {
-		        serial.writeLine("Leader Mark =" + lowDuration + "us");
-		        serial.writeLine("Leader Space =" + highDuration + "us (error)");
+//serial.writeLine("Leader Mark =" + lowDuration + "us");
+//serial.writeLine("Leader Space =" + highDuration + "us (error)");
 				continue;
 			}
 
@@ -1008,14 +975,14 @@ const BIT_SPACE_1_MAX = BIT1_SPACE + 200;        // "1"のLo時間（μs）
 	        }
 
 	        if (bits < 0) {
-		        serial.writeLine("Leader Mark =" + lowDuration + "us");
-		        serial.writeLine("Leader Space =" + highDuration + "us");
+//serial.writeLine("Leader Mark =" + lowDuration + "us");
+//serial.writeLine("Leader Space =" + highDuration + "us");
 		        
-		        let str = "";
-		        for (let i = 0; i <= ii; i++) {
-			        serial.writeLine("mark  time[" + i + "] =" + markTime[i] + "us");
-			        serial.writeLine("space time[" + i + "] =" + spaceTime[i] + "us");
-				}
+//		        let str = "";
+//		        for (let i = 0; i <= ii; i++) {
+//serial.writeLine("mark  time[" + i + "] =" + markTime[i] + "us");
+//serial.writeLine("space time[" + i + "] =" + spaceTime[i] + "us");
+//				}
 				continue; // データビット受信失敗ならループの最初に戻る
 			}
 
@@ -1030,9 +997,9 @@ const BIT_SPACE_1_MAX = BIT1_SPACE + 200;        // "1"のLo時間（μs）
 			//---------------------------------------------------
 	        // ★ 4. 受信データ解析
 			//---------------------------------------------------
-	        serial.writeLine("Leader Mark =" + lowDuration + "us");
-	        serial.writeLine("Leader Space =" + highDuration + "us");
-	        serial.writeLine("IR received! Raw bits=" + bits);
+//serial.writeLine("Leader Mark =" + lowDuration + "us");
+//serial.writeLine("Leader Space =" + highDuration + "us");
+//serial.writeLine("IR received! Raw bits=" + bits);
 
 	        let systemAddr = (bits >> 4) & 0x0F    // 上位4bit（システムアドレス）
 	        let cmdParity  = bits & 0x0F            // 下位4bit（コマンド+パリティ）
@@ -1046,7 +1013,7 @@ const BIT_SPACE_1_MAX = BIT1_SPACE + 200;        // "1"のLo時間（μs）
 	            if ((bits >> i) & 0x01) calcParity ^= 1
 	        }
 	        if (parity != calcParity) {
-	            serial.writeLine("Parity error!")
+//serial.writeLine("Parity error!")
 	            continue
 	        }
 
@@ -1054,14 +1021,237 @@ const BIT_SPACE_1_MAX = BIT1_SPACE + 200;        // "1"のLo時間（μs）
 	        let kind = cmd;   				// 0 = 離脱, 1 = 検出, 2 = 先頭車両
 
 	        // システムアドレスからセンサーID変換（1〜16）
-	        let sensorID = systemAddr + 1
+	        let sensorID = systemAddr;
 
 	        // ★ 最終的な受信結果をシリアル出力
-	        serial.writeLine("SensorID=" + sensorID + " Kind=" + kind)
+//serial.writeLine("SensorID=" + sensorID + " Kind=" + kind)
 
-	        // 必要ならここでイベント発火もできる
-	        // let value = (sensorID << 4) | kind
-	        // control.raiseEvent(4000, value)
+			// ここでイベントを発火
+			//let value = (sensorID << 4) | kind
+			//control.raiseEvent(EVT_IR, value)
+			raiseDeduplicatedEvent(sensorID, kind);
+	    }
+	})
+
+
+
+	//===============================================
+	// IR受信デコード：サブ受信ユニット（バックグラウンド＋シリアル出力付き版）
+	//===============================================
+	control.inBackground(function () {
+//serial.writeLine("IR receive...");
+
+	    pins.setPull(PIN_IR2, PinPullMode.PullUp);
+
+	    while (true) {
+			//---------------------------------------------------
+	        // ★ 1. Leader Mark検出
+			//---------------------------------------------------
+			// リーダー Mark 開始（Lowパルス）まで待機
+	        while (pins.digitalReadPin(PIN_IR2) == 1);
+
+	        // リーダー Mark 開始（↓立ち下がり）を検出
+	        let t0 = control.micros();
+	        let t1;
+	        
+			let lowDuration = 0;
+			let loopFlag = false;
+			
+			while (true) {
+		        // リーダー Mark が終了（High）まで待機
+		        while (pins.digitalReadPin(PIN_IR2) == 0);
+		        
+		        // リーダー Mark 終了（↑立ち上がり）を検出
+		        t1 = control.micros();
+
+		        lowDuration = t1 - t0;
+
+		        // ★ リーダー判定（LEADER_MARK_MIN以下）
+		        if (lowDuration < LEADER_MARK_MIN) {
+		            continue;
+		        } else if (lowDuration > LEADER_MARK_MAX) {
+					loopFlag = true;
+					break;
+				} else {
+					loopFlag = false;
+					break;
+				}
+		    }
+		    if (loopFlag == true) {
+//serial.writeLine("Leader Mark =" + lowDuration + "us (error)");
+				continue;
+			}
+
+			//--------------------------------------------------- https://github.com/HideoNishihara/LayoutManagerPlarail
+	        // ★ 2. Leader Space検出
+			//---------------------------------------------------
+	        // リーダー Space 開始（↑立ちあがり）状態でここに来る
+	        let t2 = t1;	//control.micros();
+			let t3;
+			
+			let highDuration = 0;
+			loopFlag = false;
+			
+			while (true) {
+		        // リーダー Space が終了（Lo）まで待機
+		        while (pins.digitalReadPin(PIN_IR2) == 1);
+		        
+		        // リーダー Space 終了（↓立ち下がり）を検出
+		        t3 = control.micros();
+
+		        highDuration = t3 - t2;
+
+		        // ★ スペース判定（LEADER_SPACE_MIN以下）
+		        if (highDuration < LEADER_SPACE_MIN) {
+		            continue;
+		        } else if (highDuration > LEADER_SPACE_MAX) {
+					loopFlag = true;
+					break;
+				} else {
+					loopFlag = false;
+					break;
+				}
+			}
+		    if (loopFlag == true) {
+//serial.writeLine("Leader Mark =" + lowDuration + "us");
+//serial.writeLine("Leader Space =" + highDuration + "us (error)");
+				continue;
+			}
+
+			//---------------------------------------------------
+	        // ★ 3. データビット受信（8ビット）
+			//---------------------------------------------------
+			//ここには、Lo で来る
+			
+			let markTime = [];
+			let spaceTime = [];
+	        
+	        let bits = 0;
+	        let t5;
+	        
+	        let ii;
+	        
+	        for (let i = 0; i < 8; i++) {
+	            
+	            ii = i;
+	            markTime[i] = -1;
+	            spaceTime[i] = -1;
+	            
+	            // Lowパルス（MARK）を受信
+	            let t4 = t3;
+	        	let markDuration
+	            
+	            while (true) {
+		            while (pins.digitalReadPin(PIN_IR2) == 0);
+		            
+		            t5 = control.micros();
+
+		            markDuration = t5 - t4;
+
+		            // mark長のチェック
+		            if (markDuration < BIT_MARK_MIN) {
+		                continue;
+		            } else if (markDuration > BIT_MARK_MAX) {
+						markTime[i] = markDuration;
+						bits = -1;
+						break;
+					} else {
+						markTime[i] = markDuration;
+						break;
+					}
+
+	            }
+	            if (bits < 0) break;
+
+
+	            // Highパルス（space）を受信	この長さでbitデータを取得
+	            let t6 = t5;
+	            let spaceDuration;
+	            
+	            while (true) {
+		            while (pins.digitalReadPin(PIN_IR2) == 1);
+		            
+		            let t7 = control.micros();
+		            t3 = t7;
+
+		            spaceDuration = t7 - t6;
+		        
+		            // space長のチェック
+		            if (spaceDuration < BIT_SPACE_0_MIN) {
+		                continue;
+		            } else if (spaceDuration < BIT_SPACE_0_MAX) {
+						spaceTime[i] = spaceDuration;
+						break;
+		            } else if (spaceDuration < BIT_SPACE_1_MIN) {
+		                continue;
+		            } else if (spaceDuration > BIT_SPACE_1_MAX) {
+						spaceTime[i] = spaceDuration;
+						bits = -1;
+						break;
+					} else {
+						spaceTime[i] = spaceDuration;
+						break;
+					}
+		        }
+	            if (bits < 0) break;
+	        }
+
+	        if (bits < 0) {
+//serial.writeLine("Leader Mark =" + lowDuration + "us");
+//serial.writeLine("Leader Space =" + highDuration + "us");
+		        
+//		        let str = "";
+//		        for (let i = 0; i <= ii; i++) {
+//serial.writeLine("mark  time[" + i + "] =" + markTime[i] + "us");
+//serial.writeLine("space time[" + i + "] =" + spaceTime[i] + "us");
+//				}
+				continue; // データビット受信失敗ならループの最初に戻る
+			}
+
+            //受信データを、bitsにセット
+            bits = 0;
+	        for (let i = 7; i >= 0; i--) {
+	            if (spaceTime[7-i] > (BIT0_SPACE + BIT1_SPACE)/2) {
+	                bits |= (1 << i);  // "1"ならビット立てる
+	            }
+	        }
+
+			//---------------------------------------------------
+	        // ★ 4. 受信データ解析
+			//---------------------------------------------------
+//serial.writeLine("Leader Mark =" + lowDuration + "us");
+//serial.writeLine("Leader Space =" + highDuration + "us");
+//serial.writeLine("IR received! Raw bits=" + bits);
+
+	        let systemAddr = (bits >> 4) & 0x0F    // 上位4bit（システムアドレス）
+	        let cmdParity  = bits & 0x0F            // 下位4bit（コマンド+パリティ）
+
+	        let cmd = (cmdParity >> 1) & 0x07       // コマンド（1〜3bit）
+	        let parity = cmdParity & 0x01           // パリティビット（最下位1bit）
+
+	        // パリティチェック
+	        let calcParity = 0
+	        for (let i = 1; i < 8; i++) {
+	            if ((bits >> i) & 0x01) calcParity ^= 1
+	        }
+	        if (parity != calcParity) {
+//serial.writeLine("Parity error!")
+	            continue
+	        }
+
+	        // コマンドから種別
+	        let kind = cmd;   				// 0 = 離脱, 1 = 検出, 2 = 先頭車両
+
+	        // システムアドレスからセンサーID変換（1〜16）
+	        let sensorID = systemAddr;
+
+	        // ★ 最終的な受信結果をシリアル出力
+//serial.writeLine("SensorID=" + sensorID + " Kind=" + kind)
+
+			// ここでイベントを発火
+			//let value = (sensorID << 4) | kind
+			//control.raiseEvent(EVT_IR, value)
+			raiseDeduplicatedEvent(sensorID, kind);
 	    }
 	})
 
