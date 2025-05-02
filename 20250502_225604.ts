@@ -806,7 +806,6 @@ namespace plarail {
 	const BIT_SPACE_1_MIN = BIT1_SPACE - 200;        // "1"のLo時間（μs）
 	const BIT_SPACE_1_MAX = BIT1_SPACE + 200;        // "1"のLo時間（μs）
 
-/*
 	//===============================================
 	// IR受信デコード：メイン受信ユニット（バックグラウンド＋シリアル出力付き版）
 	//===============================================
@@ -816,11 +815,13 @@ namespace plarail {
 	    pins.setPull(PIN_IR, PinPullMode.PullUp);
 
 	    while (true) {
+			control.waitMicros(100);
+
 			//---------------------------------------------------
 	        // ★ 1. Leader Mark検出
 			//---------------------------------------------------
 			// リーダー Mark 開始（Lowパルス）まで待機
-	        while (pins.digitalReadPin(PIN_IR) == 1) control.waitMicros(100);;
+	        while (pins.digitalReadPin(PIN_IR) == 1) control.waitMicros(100);
 
 	        // リーダー Mark 開始（↓立ち下がり）を検出
 	        let t0 = control.micros();
@@ -830,6 +831,8 @@ namespace plarail {
 			let loopFlag = false;
 			
 			while (true) {
+				control.waitMicros(100);
+					
 		        // リーダー Mark が終了（High）まで待機
 		        while (pins.digitalReadPin(PIN_IR) == 0) control.waitMicros(100);
 		        
@@ -865,8 +868,10 @@ namespace plarail {
 			loopFlag = false;
 			
 			while (true) {
+				control.waitMicros(100);
+				
 		        // リーダー Space が終了（Lo）まで待機
-		        while (pins.digitalReadPin(PIN_IR) == 1);
+		        while (pins.digitalReadPin(PIN_IR) == 1) control.waitMicros(100);
 		        
 		        // リーダー Space 終了（↓立ち下がり）を検出
 		        t3 = control.micros();
@@ -914,7 +919,8 @@ namespace plarail {
 	        	let markDuration
 	            
 	            while (true) {
-		            while (pins.digitalReadPin(PIN_IR) == 0);
+					control.waitMicros(10);
+		            while (pins.digitalReadPin(PIN_IR) == 0) control.waitMicros(10);
 		            
 		            t5 = control.micros();
 
@@ -941,7 +947,9 @@ namespace plarail {
 	            let spaceDuration;
 	            
 	            while (true) {
-		            while (pins.digitalReadPin(PIN_IR) == 1);
+					control.waitMicros(10);
+
+		            while (pins.digitalReadPin(PIN_IR) == 1) control.waitMicros(10);
 		            
 		            let t7 = control.micros();
 		            t3 = t7;
@@ -1026,7 +1034,7 @@ namespace plarail {
 			raiseDeduplicatedEvent(sensorID, kind);
 	    }
 	})
-*/
+
 
 /*
 	//===============================================
@@ -1038,6 +1046,8 @@ namespace plarail {
 	    pins.setPull(PIN_IR2, PinPullMode.PullUp);
 
 	    while (true) {
+			control.waitMicros(100);
+			
 			//---------------------------------------------------
 	        // ★ 1. Leader Mark検出
 			//---------------------------------------------------
@@ -1052,6 +1062,8 @@ namespace plarail {
 			let loopFlag = false;
 			
 			while (true) {
+				control.waitMicros(100);
+				
 		        // リーダー Mark が終了（High）まで待機
 		        while (pins.digitalReadPin(PIN_IR2) == 0) control.waitMicros(100);
 		        
@@ -1087,8 +1099,10 @@ namespace plarail {
 			loopFlag = false;
 			
 			while (true) {
+				control.waitMicros(100);
+				
 		        // リーダー Space が終了（Lo）まで待機
-		        while (pins.digitalReadPin(PIN_IR2) == 1);
+		        while (pins.digitalReadPin(PIN_IR2) == 1) control.waitMicros(100);
 		        
 		        // リーダー Space 終了（↓立ち下がり）を検出
 		        t3 = control.micros();
@@ -1136,7 +1150,9 @@ namespace plarail {
 	        	let markDuration
 	            
 	            while (true) {
-		            while (pins.digitalReadPin(PIN_IR2) == 0);
+						control.waitMicros(10);
+						
+		            while (pins.digitalReadPin(PIN_IR2) == 0) control.waitMicros(10);
 		            
 		            t5 = control.micros();
 
@@ -1163,7 +1179,9 @@ namespace plarail {
 	            let spaceDuration;
 	            
 	            while (true) {
-		            while (pins.digitalReadPin(PIN_IR2) == 1);
+						control.waitMicros(10);
+						
+		            while (pins.digitalReadPin(PIN_IR2) == 1) control.waitMicros(10);
 		            
 		            let t7 = control.micros();
 		            t3 = t7;
