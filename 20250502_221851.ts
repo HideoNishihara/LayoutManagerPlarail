@@ -1,9 +1,3 @@
-declare namespace assets {
-    const soundDepartureMelody: music.Playable;
-    const soundDepartureBell: music.Playable;
-    const soundAnnounce: music.Playable;
-}
-
 //% weight=100 color=#003366 icon="\uf239" block="Layout Manager Plarail"
 namespace plarail {
 	// #################################################
@@ -53,13 +47,13 @@ namespace plarail {
 
 	//===============================================
 	//	Start/Stopボタンの押下時の処理（runMode==RunMode.Runの場合のみ）
-    // 		タクトスイッチ(P5)が押され runMode が切り替わったとき
+    // 		タクトスイッチ(P8)が押され runMode が切り替わったとき
     //		@param handler running が true なら走行開始 / false なら停止
 	//===============================================
     enum RunMode { Stop = 0, Run = 1 }			// 初期値 0
     let runMode: RunMode = RunMode.Stop
     
-    const EVT_TOGGLE = 3000  					// P5 押下で runMode が切り替わったとき
+    const EVT_TOGGLE = 3000  					// P8 押下で runMode が切り替わったとき
     
     //% block="Start/Stopボタンが押されたとき"
     //% blockId=plarail_onToggle
@@ -826,7 +820,7 @@ namespace plarail {
 	        // ★ 1. Leader Mark検出
 			//---------------------------------------------------
 			// リーダー Mark 開始（Lowパルス）まで待機
-	        while (pins.digitalReadPin(PIN_IR) == 1);
+	        while (pins.digitalReadPin(PIN_IR) == 1) control.waitMicros(100);;
 
 	        // リーダー Mark 開始（↓立ち下がり）を検出
 	        let t0 = control.micros();
@@ -837,7 +831,7 @@ namespace plarail {
 			
 			while (true) {
 		        // リーダー Mark が終了（High）まで待機
-		        while (pins.digitalReadPin(PIN_IR) == 0);
+		        while (pins.digitalReadPin(PIN_IR) == 0) control.waitMicros(100);
 		        
 		        // リーダー Mark 終了（↑立ち上がり）を検出
 		        t1 = control.micros();
@@ -860,7 +854,7 @@ namespace plarail {
 				continue;
 			}
 
-			//--------------------------------------------------- https://github.com/HideoNishihara/LayoutManagerPlarail
+			//--------------------------------------------------- 
 	        // ★ 2. Leader Space検出
 			//---------------------------------------------------
 	        // リーダー Space 開始（↑立ちあがり）状態でここに来る
@@ -1048,7 +1042,7 @@ namespace plarail {
 	        // ★ 1. Leader Mark検出
 			//---------------------------------------------------
 			// リーダー Mark 開始（Lowパルス）まで待機
-	        while (pins.digitalReadPin(PIN_IR2) == 1);
+	        while (pins.digitalReadPin(PIN_IR2) == 1) control.waitMicros(100);
 
 	        // リーダー Mark 開始（↓立ち下がり）を検出
 	        let t0 = control.micros();
@@ -1059,7 +1053,7 @@ namespace plarail {
 			
 			while (true) {
 		        // リーダー Mark が終了（High）まで待機
-		        while (pins.digitalReadPin(PIN_IR2) == 0);
+		        while (pins.digitalReadPin(PIN_IR2) == 0) control.waitMicros(100);
 		        
 		        // リーダー Mark 終了（↑立ち上がり）を検出
 		        t1 = control.micros();
