@@ -815,13 +815,13 @@ namespace plarail {
 	    pins.setPull(PIN_IR, PinPullMode.PullUp);
 
 	    while (true) {
-			control.waitMicros(100);
+			basic.pause(0);
 
 			//---------------------------------------------------
 	        // ★ 1. Leader Mark検出
 			//---------------------------------------------------
 			// リーダー Mark 開始（Lowパルス）まで待機
-	        while (pins.digitalReadPin(PIN_IR) == 1) control.waitMicros(100);
+	        while (pins.digitalReadPin(PIN_IR) == 1) basic.pause(0);
 
 	        // リーダー Mark 開始（↓立ち下がり）を検出
 	        let t0 = control.micros();
@@ -831,10 +831,10 @@ namespace plarail {
 			let loopFlag = false;
 			
 			while (true) {
-				control.waitMicros(100);
+				basic.pause(0);
 					
 		        // リーダー Mark が終了（High）まで待機
-		        while (pins.digitalReadPin(PIN_IR) == 0) control.waitMicros(100);
+		        while (pins.digitalReadPin(PIN_IR) == 0) basic.pause(0);
 		        
 		        // リーダー Mark 終了（↑立ち上がり）を検出
 		        t1 = control.micros();
@@ -868,10 +868,10 @@ namespace plarail {
 			loopFlag = false;
 			
 			while (true) {
-				control.waitMicros(100);
+				basic.pause(0);
 				
 		        // リーダー Space が終了（Lo）まで待機
-		        while (pins.digitalReadPin(PIN_IR) == 1) control.waitMicros(100);
+		        while (pins.digitalReadPin(PIN_IR) == 1) basic.pause(0);
 		        
 		        // リーダー Space 終了（↓立ち下がり）を検出
 		        t3 = control.micros();
@@ -919,8 +919,9 @@ namespace plarail {
 	        	let markDuration
 	            
 	            while (true) {
-					control.waitMicros(10);
-		            while (pins.digitalReadPin(PIN_IR) == 0) control.waitMicros(10);
+					basic.pause(0);
+					
+		            while (pins.digitalReadPin(PIN_IR) == 0) basic.pause(0);
 		            
 		            t5 = control.micros();
 
@@ -947,9 +948,9 @@ namespace plarail {
 	            let spaceDuration;
 	            
 	            while (true) {
-					control.waitMicros(10);
+					basic.pause(0);
 
-		            while (pins.digitalReadPin(PIN_IR) == 1) control.waitMicros(10);
+		            while (pins.digitalReadPin(PIN_IR) == 1) basic.pause(0);
 		            
 		            let t7 = control.micros();
 		            t3 = t7;
@@ -1046,13 +1047,13 @@ namespace plarail {
 	    pins.setPull(PIN_IR2, PinPullMode.PullUp);
 
 	    while (true) {
-			control.waitMicros(100);
+			basic.pause(0);
 			
 			//---------------------------------------------------
 	        // ★ 1. Leader Mark検出
 			//---------------------------------------------------
 			// リーダー Mark 開始（Lowパルス）まで待機
-	        while (pins.digitalReadPin(PIN_IR2) == 1) control.waitMicros(100);
+	        while (pins.digitalReadPin(PIN_IR2) == 1) basic.pause(0);
 
 	        // リーダー Mark 開始（↓立ち下がり）を検出
 	        let t0 = control.micros();
@@ -1062,10 +1063,10 @@ namespace plarail {
 			let loopFlag = false;
 			
 			while (true) {
-				control.waitMicros(100);
+				basic.pause(0);
 				
 		        // リーダー Mark が終了（High）まで待機
-		        while (pins.digitalReadPin(PIN_IR2) == 0) control.waitMicros(100);
+		        while (pins.digitalReadPin(PIN_IR2) == 0) basic.pause(0);
 		        
 		        // リーダー Mark 終了（↑立ち上がり）を検出
 		        t1 = control.micros();
@@ -1099,10 +1100,10 @@ namespace plarail {
 			loopFlag = false;
 			
 			while (true) {
-				control.waitMicros(100);
+				basic.pause(0);
 				
 		        // リーダー Space が終了（Lo）まで待機
-		        while (pins.digitalReadPin(PIN_IR2) == 1) control.waitMicros(100);
+		        while (pins.digitalReadPin(PIN_IR2) == 1) basic.pause(0);
 		        
 		        // リーダー Space 終了（↓立ち下がり）を検出
 		        t3 = control.micros();
@@ -1150,9 +1151,9 @@ namespace plarail {
 	        	let markDuration
 	            
 	            while (true) {
-						control.waitMicros(10);
+					basic.pause(0);
 						
-		            while (pins.digitalReadPin(PIN_IR2) == 0) control.waitMicros(10);
+		            while (pins.digitalReadPin(PIN_IR2) == 0) basic.pause(0);
 		            
 		            t5 = control.micros();
 
@@ -1179,9 +1180,9 @@ namespace plarail {
 	            let spaceDuration;
 	            
 	            while (true) {
-						control.waitMicros(10);
+					basic.pause(0);
 						
-		            while (pins.digitalReadPin(PIN_IR2) == 1) control.waitMicros(10);
+		            while (pins.digitalReadPin(PIN_IR2) == 1) basic.pause(0);
 		            
 		            let t7 = control.micros();
 		            t3 = t7;
